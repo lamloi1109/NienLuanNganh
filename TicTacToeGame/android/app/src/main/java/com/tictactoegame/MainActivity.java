@@ -1,5 +1,4 @@
 package com.tictactoegame;
-
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;
 public class MainActivity extends ReactActivity {

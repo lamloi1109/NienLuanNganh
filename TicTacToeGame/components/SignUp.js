@@ -45,7 +45,6 @@ export default class SignUp extends React.Component {
             })
             .catch((error) => {
                 if (error.code === 'auth/email-already-in-use') {
-                    // console.log('That email address is already in use!')
                     toast.show('That email address is already in use!', {
                         type: 'warning ',
                         placement: 'bottom',

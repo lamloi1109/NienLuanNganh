@@ -12,7 +12,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import MainScreen from './components/Main'
 import SignUpScreen from './components/SignUp'
 import LoginScreen from './components/Login'
-import LoadingScreen from './components/Loading'
+import LoadingScreen from './components/Loader'
 import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import Toast from 'react-native-toast-notifications'
@@ -21,10 +21,10 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers/index'
 import thunk from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension'
 
 // const middleware = composeWithDevTools();
-const store = createStore(rootReducer,applyMiddleware(thunk) )
+const store = createStore(rootReducer, applyMiddleware(thunk))
 const firebaseConfig = {
     apiKey: 'AIzaSyDcOkNIB1vgkTXelGALveeE5-Ez7TYcnH0',
     authDomain: 'tictactoe-783b5.firebaseapp.com',
@@ -43,58 +43,65 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            loaded: false
+            loaded: false,
+            visible: true
         }
     }
-    componentDidMount(){
-        auth().onAuthStateChanged((user) => {
-            console.log(user);
-            if(!user){
-                this.setState({
-                    loggedIn: false,
-                    loaded: true
-                })
-            } else{
-                this.setState({
-                    loggedIn: true,
-                    loaded: true
-                })
-            }
-        })
+    componentDidMount() {
+        setInterval(() => {
+            this.setState({
+                visible: !this.state.visible
+              });
+            auth().onAuthStateChanged((user) => {
+                if (!user) {
+                    this.setState({
+                        loggedIn: false,
+                        loaded: true,
+                    })
+                } else {
+                    this.setState({
+                        loggedIn: true,
+                        loaded: true,
+                    })
+                }
+            })
+            
+          }, 3000);
+        
     }
     render() {
-        const {loggedIn, loaded} = this.state
-        if(!loaded){
-            return(
+        const { loggedIn, loaded, visible } = this.state
+        if (!loaded) {
+            return (
                 <View>
-                    <Text>
-                        Loading!!!!
-                    </Text>
+                    <LoadingScreen visible={visible} />
                 </View>
             )
         }
-        if(!loggedIn){
+        if (!loggedIn) {
             return (
                 <>
                     <NavigationContainer>
                         <Stack.Navigator initialRouteName="Login">
                             <Stack.Screen
-                                name="Loading"
-                                component={LoadingScreen}
+                                name="SignUp"
+                                component={SignUpScreen}
                             />
-                            <Stack.Screen name="SignUp" component={SignUpScreen} />
-                            <Stack.Screen name="Login" component={LoginScreen} />
+                            <Stack.Screen
+                                name="Login"
+                                component={LoginScreen}
+                            />
                             {/* <Stack.Screen name="Main" component={MainScreen} /> */}
                         </Stack.Navigator>
                     </NavigationContainer>
-                    <Toast ref={(ref) => global['toast'] = ref} />
+                    <Toast ref={(ref) => (global['toast'] = ref)} />
                 </>
             )
         }
         return (
-           <Provider store={store} >
-              <MainScreen/>
-           </Provider>
+               <Provider store={store} >
+                  <MainScreen/>
+               </Provider>
         )
     }
 }

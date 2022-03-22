@@ -6,11 +6,10 @@ import { fetchUser } from '../redux/actions/index'
 class Main extends Component {
     componentDidMount() {
         this.props.fetchUser()
-        console.log(this.props)
     }
     render() {
         const { currentUSer } = this.props
-        console.log(this.props)
+        // console.log(this.props)
         if (currentUSer == undefined) {
             this.props.fetchUser()
             return (
