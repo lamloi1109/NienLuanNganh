@@ -9,22 +9,22 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import MainScreen, { Main } from './components/Main'
+import MainScreen from './components/Main'
 import SignUpScreen from './components/SignUp'
 import LoginScreen from './components/Login'
 import LoadingScreen from './components/Loading'
 import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import Toast from 'react-native-toast-notifications'
 import { View, Text } from 'react-native'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
-import rootReducer from './redux/reducers'
+import rootReducer from './redux/reducers/index'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-const middleware = composeWithDevTools(applyMiddleware(thunk));
-const store = createStore(rootReducer,middleware )
-console.log(store);
+// const middleware = composeWithDevTools();
+const store = createStore(rootReducer,applyMiddleware(thunk) )
 const firebaseConfig = {
     apiKey: 'AIzaSyDcOkNIB1vgkTXelGALveeE5-Ez7TYcnH0',
     authDomain: 'tictactoe-783b5.firebaseapp.com',
@@ -47,7 +47,8 @@ class App extends React.Component {
         }
     }
     componentDidMount(){
-        firebase.auth().onAuthStateChanged((user) => {
+        auth().onAuthStateChanged((user) => {
+            console.log(user);
             if(!user){
                 this.setState({
                     loggedIn: false,
@@ -83,7 +84,7 @@ class App extends React.Component {
                             />
                             <Stack.Screen name="SignUp" component={SignUpScreen} />
                             <Stack.Screen name="Login" component={LoginScreen} />
-                            <Stack.Screen name="Main" component={MainScreen} />
+                            {/* <Stack.Screen name="Main" component={MainScreen} /> */}
                         </Stack.Navigator>
                     </NavigationContainer>
                     <Toast ref={(ref) => global['toast'] = ref} />

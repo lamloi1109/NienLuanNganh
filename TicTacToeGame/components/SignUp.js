@@ -7,10 +7,9 @@ import {
     View,
     Text,
 } from 'react-native'
-import SignupSchema from './Validation'
+import {SignupSchema} from './Validation'
 import auth from '@react-native-firebase/auth'
 import { Formik } from 'formik'
-import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore';
 export default class SignUp extends React.Component {
     constructor(props) {
@@ -24,17 +23,17 @@ export default class SignUp extends React.Component {
         this.handleOnSignUp = this.handleOnSignUp.bind(this)
     }
     handleOnSignUp() {
-        const { email, password } = this.state
+        const {name, email, password } = this.state
         auth()
             .createUserWithEmailAndPassword(email, password)
             .then(() => {
-                firestore().collection("user")
-                    .doc(firebase.auth().currentUser.uid)
+                firestore()
+                    .collection("users")
+                    .doc(auth().currentUser.uid)
                     .set({
                         name,
-                        mail
+                        email
                     })
-                
                 console.log('User account created & signed in!')
                 toast.show('Task finished successfully', {
                     type: 'success',

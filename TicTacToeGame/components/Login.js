@@ -7,7 +7,7 @@ import {
     View,
     Text,
 } from 'react-native'
-import SignupSchema from './Validation'
+import {SigninSchema} from './Validation'
 import auth from '@react-native-firebase/auth'
 import { Formik } from 'formik'
 
@@ -18,12 +18,11 @@ export default class Login extends React.Component {
             email: '',
             password: '',
         }
-
         this.handleOnSignIn = this.handleOnSignIn.bind(this)
     }
     handleOnSignIn() {
-        const { email, password } = this.state
         console.log('signin')
+        const { email, password } = this.state
         auth()
             .signInWithEmailAndPassword(email, password)
             .then(() => {
@@ -47,7 +46,27 @@ export default class Login extends React.Component {
                       animationType: 'slide-in',
                   })
                 }
-                console.error(error)
+                if (error.code === 'auth/wrong-password') {
+                    console.log('The password is invalid or the user does not have a password.')
+                    toast.show('The password is invalid or the user does not have a password.', {
+                      type: 'warning ',
+                      placement: 'bottom',
+                      duration: 4000,
+                      offset: 30,
+                      animationType: 'slide-in',
+                  })
+                }
+                if (error.code === 'auth/user-not-found') {
+                    console.log('User doesnot exist.')
+                    toast.show('User doesnot exist.', {
+                      type: 'warning ',
+                      placement: 'bottom',
+                      duration: 4000,
+                      offset: 30,
+                      animationType: 'slide-in',
+                  })
+                }
+                // console.error(error)
             })
     }
 
@@ -60,7 +79,7 @@ export default class Login extends React.Component {
                         email: '',
                         password: '',
                     }}
-                    validationSchema={SignupSchema}
+                    validationSchema={SigninSchema}
                     onSubmit={(values) => {
                         this.setState({
                             email: values.email,
