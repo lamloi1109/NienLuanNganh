@@ -49,19 +49,18 @@ class App extends React.Component {
     }
     componentDidMount() {
         setInterval(() => {
-            this.setState({
-                visible: !this.state.visible
-              });
             auth().onAuthStateChanged((user) => {
                 if (!user) {
                     this.setState({
                         loggedIn: false,
                         loaded: true,
+                        visible: !this.state.visible
                     })
                 } else {
                     this.setState({
                         loggedIn: true,
                         loaded: true,
+                        visible: !this.state.visible
                     })
                 }
             })
