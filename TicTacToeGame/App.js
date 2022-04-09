@@ -22,9 +22,9 @@ import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers/index'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+const middleware = composeWithDevTools(applyMiddleware(thunk));
+const store = createStore(rootReducer, middleware);
 
-// const middleware = composeWithDevTools();
-const store = createStore(rootReducer, applyMiddleware(thunk))
 const firebaseConfig = {
     apiKey: 'AIzaSyDcOkNIB1vgkTXelGALveeE5-Ez7TYcnH0',
     authDomain: 'tictactoe-783b5.firebaseapp.com',
@@ -37,7 +37,7 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig)
 }
-
+console.log(store.getState())
 const Stack = createNativeStackNavigator()
 class App extends React.Component {
     constructor(props) {

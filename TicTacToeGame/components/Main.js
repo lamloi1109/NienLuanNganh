@@ -7,27 +7,32 @@ class Main extends Component {
     componentDidMount() {
         this.props.fetchUser()
     }
-    render() {
-        const { currentUSer } = this.props
-        // console.log(this.props)
-        if (currentUSer == undefined) {
-            this.props.fetchUser()
-            return (
+    render() {        
+        const { userState } = this.props;
+        let userName = "";
+        if(userState.currentUser != null){
+            userName = userState.currentUser.name;
+            console.log(userName);
+        }   
+        if(userState === undefined){
+            return(
                 <View>
-                    <Text>Undefined</Text>
-                </View>
+            </View>
             )
         }
         return (
             <View>
-                <Text>{this.props.name} is logged In</Text>
+                <Text>{userName} is logged In</Text>
             </View>
         )
     }
 }
-const mapStateToProps = (store) => ({
-    currentUSer: store.userState.currentUSer 
-})
+
+function mapStateToProps(state) {
+    console.log(state.userState);
+    return { userState: state.userState }
+}
+
 const mapDispatchToProps = (dispatch) =>  bindActionCreators({ fetchUser }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
