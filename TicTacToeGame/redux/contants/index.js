@@ -1,1 +1,3 @@
 export const USER_STATE_CHANGE = 'USER_STATE_CHANGE';
+export const SET_GAME_MODE = 'SET_GAME_MODE';
+export const GET_GAME_MODE = 'GET_GAME_MODE';

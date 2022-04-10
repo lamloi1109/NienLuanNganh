@@ -7,7 +7,7 @@ import {
     View,
     Text,
 } from 'react-native'
-import {SigninSchema} from './Validation'
+import {SigninSchema} from '../Validation'
 import auth from '@react-native-firebase/auth'
 import { Formik } from 'formik'
 
