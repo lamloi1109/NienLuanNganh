@@ -5,15 +5,12 @@ const initializeState = {
 
 export const gameReducer = (state = initializeState, action) => {
     switch(action.type){
-        case SET_GAME_MODE: 
-        console.log(action);
-        return {
-            ...state,
-            gameMode: action.gameMode
-        }
-        case GET_GAME_MODE: 
-            console.log("GET Game Mode");
-            return state.gameMode;
+           case SET_GAME_MODE: 
+            console.log(action);
+            return {
+                ...state,
+                gameMode: action.gameMode
+            }     
         default:
             return state;
     }

@@ -38,15 +38,3 @@ export function setGameMode(gameMode) {
         console.log(stateAfter);
     }
 }
-
-export function getGameMode(gameMode) {
-    return (dispatch, getState) => {
-        const stateBefore = getState()
-        console.log(stateBefore);
-        dispatch({
-            type: GET_GAME_MODE
-        })
-        const stateAfter = getState()
-        console.log(stateAfter);
-    }
-}
