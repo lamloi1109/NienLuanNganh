@@ -12,6 +12,8 @@ target 'TicTacToeGame' do
     :hermes_enabled => false
   )
 
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   target 'TicTacToeGameTests' do
     inherit! :complete
     # Pods for testing

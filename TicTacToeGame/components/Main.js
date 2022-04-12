@@ -1,9 +1,19 @@
 import React, { Component } from 'react'
-import { View, Text, Pressable, Image, ImageBackground } from 'react-native'
+import {
+    View,
+    Text,
+    Pressable,
+    Image,
+    ImageBackground,
+    Modal,
+    Switch,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchUser, setGameMode } from '../redux/actions/index'
 import Icon from 'react-native-vector-icons/Ionicons'
+import auth from '@react-native-firebase/auth'
+var Sound = require('react-native-sound')
 
 class Main extends Component {
     constructor(props) {
@@ -16,9 +26,48 @@ class Main extends Component {
     componentDidMount() {
         console.log(this.props)
         this.props.fetchUser()
+        
+    }
+    state = {
+        modalVisible: false,
+        isEnabled: true
+    }
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible })
     }
 
     render() {
+        const { modalVisible, isEnabled } = this.state
+        Sound.setCategory('Playback')
+        var ding = new Sound('touch.wav', Sound.MAIN_BUNDLE, (error) => {
+            if (error) {
+                console.log('failed to load the sound', error)
+                return
+            }
+            // when loaded successfully
+            console.log(
+                'duration in seconds: ' +
+                    ding.getDuration() +
+                    'number of channels: ' +
+                    ding.getNumberOfChannels()
+            )
+        })
+        const playPause = () => {
+            if(isEnabled){
+                ding.setVolume(1)
+                console.log('volume: ' + ding.getVolume());
+            } else{
+                ding.setVolume(0)
+                console.log('volume: ' + ding.getVolume());
+            }
+            ding.play((success) => {
+                if (success) {
+                    console.log('successfully finished playing')
+                } else {
+                    console.log('playback failed due to audio decoding errors')
+                }
+            })
+        }
         let userName = ''
 
         if (this.props.userState.currentUser === null) {
@@ -33,7 +82,127 @@ class Main extends Component {
                     backgroundColor: 'white',
                 }}
             >
-                
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.')
+                        this.setModalVisible(!modalVisible)
+                    }}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 22,
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: 20,
+                                backgroundColor: 'white',
+                                borderRadius: 20,
+                                padding: 35,
+                                alignItems: 'center',
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5,
+                                position: 'relative',
+                            }}
+                        >
+                            <Pressable
+                                style={{
+                                    borderRadius: 10,
+                                    padding: 5,
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                }}
+                                onPress={() =>
+                                    this.setModalVisible(!modalVisible)
+                                }
+                            >
+                                <Icon
+                                    name="close-circle-outline"
+                                    size={30}
+                                    style={{
+                                        color: '#2196F3',
+                                    }}
+                                />
+                            </Pressable>
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    fontSize: 20,
+                                }}
+                            >
+                                Settings
+                            </Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: 10,
+                                backgroundColor: '#D7D7E7',
+                                margin: 10
+                            }}>
+                                <Text>
+                                    Sound
+                                </Text>
+                                <Switch
+                                    trackColor={{
+                                        false: '#767577',
+                                        true: '#81b0ff',
+                                    }}
+                                    thumbColor={
+                                        isEnabled ? '#f5dd4b' : '#f4f3f4'
+                                    }
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={() => {
+                                        this.setState({
+                                            isEnabled: !isEnabled
+                                        })
+                                        console.log('volume 1: ' + ding.getVolume());
+                                        console.log('volume 2: ' + ding.getVolume());
+                                    }}
+                                    value={isEnabled}
+                                />
+                            </View>
+                            <Pressable
+                                style={{
+                                    borderRadius: 20,
+                                    padding: 10,
+                                    elevation: 2,
+                                    backgroundColor: '#2196F3',
+                                }}
+                                onPress={() => {
+                                    auth()
+                                        .signOut()
+                                        .then(() =>
+                                            console.log('User signed out!')
+                                        )
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    Sign Out!
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
                 <View
                     style={{
                         flexDirection: 'row',
@@ -59,6 +228,7 @@ class Main extends Component {
                             marginTop: 10,
                             marginLeft: 10,
                         }}
+                        onPress={() => this.setModalVisible(true)}
                     >
                         <Icon name="settings-outline" size={30} />
                     </Pressable>
@@ -78,7 +248,7 @@ class Main extends Component {
                 </View>
                 <View
                     style={{
-                        marginBottom: 50
+                        marginBottom: 50,
                     }}
                 >
                     <Text
@@ -140,6 +310,7 @@ class Main extends Component {
                                     height: '100%',
                                 }}
                                 onPress={() => {
+                                    playPause()
                                     this.props.setGameMode('VsMachine')
                                     this.navigate('VsMachine')
                                 }}
@@ -179,6 +350,7 @@ class Main extends Component {
                                     height: '100%',
                                 }}
                                 onPress={() => {
+                                    playPause()
                                     this.props.setGameMode('Multiplay')
                                     this.navigate('Multiplay')
                                 }}
@@ -225,6 +397,7 @@ class Main extends Component {
                                     height: '100%',
                                 }}
                                 onPress={() => {
+                                    playPause()
                                     this.props.setGameMode('VsMachine')
                                     this.navigate('VsMachine')
                                 }}
@@ -263,6 +436,7 @@ class Main extends Component {
                                     height: '100%',
                                 }}
                                 onPress={() => {
+                                    playPause()
                                     this.props.setGameMode('Multiplay')
                                     this.navigate('Multiplay')
                                 }}
@@ -275,7 +449,7 @@ class Main extends Component {
                     </View>
                     <View
                         style={{
-                            width:'100%',
+                            width: '100%',
                             height: '40%',
                             marginTop: 10,
                             flexDirection: 'row',
@@ -290,7 +464,7 @@ class Main extends Component {
                                 padding: 10,
                                 marginTop: 10,
                                 width: 300,
-                                marginLeft:10,
+                                marginLeft: 10,
                                 height: 150,
                                 borderRadius: 20,
                                 overflow: 'hidden',
@@ -312,6 +486,7 @@ class Main extends Component {
                                     height: '100%',
                                 }}
                                 onPress={() => {
+                                    playPause()
                                     this.props.setGameMode('VsMachine')
                                     this.navigate('VsMachine')
                                 }}
