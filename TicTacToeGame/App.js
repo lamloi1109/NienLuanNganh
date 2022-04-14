@@ -23,6 +23,8 @@ import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers/index'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+// import { NetInfo } from "react-native";
+import NetInfo from '@react-native-community/netinfo'
 const middleware = composeWithDevTools(applyMiddleware(thunk))
 const store = createStore(rootReducer, middleware)
 
@@ -41,11 +43,13 @@ if (firebase.apps.length === 0) {
 console.log(store.getState())
 const Stack = createNativeStackNavigator()
 class App extends React.Component {
+    NetInfoSubscribtion = null
     constructor(props) {
         super(props)
         this.state = {
             loaded: false,
             visible: true,
+            connection_status: false,
         }
     }
     componentDidMount() {
@@ -66,6 +70,22 @@ class App extends React.Component {
                 }
             })
         }, 3000)
+        this.NetInfoSubcribtion = NetInfo.addEventListener((state) => {
+            console.log('Connection type', state.type)
+            console.log('Is connected?', state.isConnected)
+        })
+        console.log(`connection status: ${this.state.connection_status}`);
+    }
+
+    componentWillUnmount(){
+        this.NetInfoSubscribtion && this.NetInfoSubscribtion();
+        console.log(NetInfo.isConnected);
+    }
+
+    _handleConnectivityChange = (state) => {
+        this.setState({
+            connection_status: state.isConnected
+        })
     }
     render() {
         const { loggedIn, loaded, visible } = this.state

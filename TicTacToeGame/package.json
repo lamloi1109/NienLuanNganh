@@ -14,6 +14,7 @@
     "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^8.2.0",
     "@react-native-firebase/app": "^14.5.1",
     "@react-native-firebase/auth": "^14.5.1",
     "@react-native-firebase/firestore": "^14.5.1",

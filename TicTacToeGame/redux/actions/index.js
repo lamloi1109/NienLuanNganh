@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth'
 export function fetchUser() {
     return (dispatch, getState) => {
         const stateBefore = getState()
-        console.log(stateBefore);
+        // console.log(stateBefore);
         firestore()
         .collection("users")
         .doc(auth().currentUser.uid)
@@ -21,7 +21,7 @@ export function fetchUser() {
             }
         })
         const stateAfter = getState()
-        console.log(stateAfter);
+        // console.log(stateAfter);
     }
 }
 
@@ -29,12 +29,12 @@ export function fetchUser() {
 export function setGameMode(gameMode) {
     return (dispatch, getState) => {
         const stateBefore = getState()
-        console.log(stateBefore);
+        // console.log(stateBefore);
         dispatch({
             type: SET_GAME_MODE,
             gameMode: gameMode
         })
         const stateAfter = getState()
-        console.log(stateAfter);
+        // console.log(stateAfter);
     }
 }

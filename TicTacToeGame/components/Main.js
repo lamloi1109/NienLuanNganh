@@ -24,13 +24,12 @@ class Main extends Component {
         this.props.navigation.navigate(txt)
     }
     componentDidMount() {
-        console.log(this.props)
+        // console.log(this.props)
         this.props.fetchUser()
-        
     }
     state = {
         modalVisible: false,
-        isEnabled: true
+        isEnabled: true,
     }
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible })
@@ -53,12 +52,12 @@ class Main extends Component {
             )
         })
         const playPause = () => {
-            if(isEnabled){
+            if (isEnabled) {
                 ding.setVolume(1)
-                console.log('volume: ' + ding.getVolume());
-            } else{
+                console.log('volume: ' + ding.getVolume())
+            } else {
                 ding.setVolume(0)
-                console.log('volume: ' + ding.getVolume());
+                console.log('volume: ' + ding.getVolume())
             }
             ding.play((success) => {
                 if (success) {
@@ -145,17 +144,17 @@ class Main extends Component {
                             >
                                 Settings
                             </Text>
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: 10,
-                                backgroundColor: '#D7D7E7',
-                                margin: 10
-                            }}>
-                                <Text>
-                                    Sound
-                                </Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: 10,
+                                    backgroundColor: '#D7D7E7',
+                                    margin: 10,
+                                }}
+                            >
+                                <Text>Sound</Text>
                                 <Switch
                                     trackColor={{
                                         false: '#767577',
@@ -167,10 +166,14 @@ class Main extends Component {
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() => {
                                         this.setState({
-                                            isEnabled: !isEnabled
+                                            isEnabled: !isEnabled,
                                         })
-                                        console.log('volume 1: ' + ding.getVolume());
-                                        console.log('volume 2: ' + ding.getVolume());
+                                        console.log(
+                                            'volume 1: ' + ding.getVolume()
+                                        )
+                                        console.log(
+                                            'volume 2: ' + ding.getVolume()
+                                        )
                                     }}
                                     value={isEnabled}
                                 />
@@ -198,6 +201,76 @@ class Main extends Component {
                                     }}
                                 >
                                     Sign Out!
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    visible={!this.props.connection_status}
+                    transparent={true}
+                    animationInTiming={600} 
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#fff',
+                            paddingHorizontal: 16,
+                            paddingBottom: 40,
+                        }}
+                    >
+                        <View
+                             style={{
+                                backgroundColor: '#fff',
+                                paddingHorizontal: 16,
+                                paddingTop: 20,
+                                paddingBottom: 40,
+                                alignItems: 'center',
+                            }}  
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 22,
+                                    fontWeight: '600',
+                                }}
+                            >
+                                Connection Error
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                    color: '#555',
+                                    marginTop: 14,
+                                    textAlign: 'center',
+                                    marginBottom: 10,
+                                }}
+                            >
+                                Oops! Looks like your device is not connected to
+                                the Internet.
+                            </Text>
+                            <Pressable
+                                style={{
+                                    backgroundColor: '#000',
+                                    paddingVertical: 12,
+                                    paddingHorizontal: 16,
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    marginTop: 10,
+                                }}
+                                onPress={() =>{
+                                    this.props.fetchUser()
+                                }} 
+                                disabled={this.props.loaded}
+                            >
+                                <Text
+                                    style={{
+                                        color: '#fff',
+                                        fontSize: 20,
+                                    }}
+                                >
+                                    Try Again
                                 </Text>
                             </Pressable>
                         </View>
@@ -481,7 +554,6 @@ class Main extends Component {
                         >
                             <Pressable
                                 style={{
-                                    zIndex: 1,
                                     width: '100%',
                                     height: '100%',
                                 }}
