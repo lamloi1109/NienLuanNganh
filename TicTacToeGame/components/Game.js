@@ -3,13 +3,24 @@ import { View, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { getGameMode } from '../redux/actions/index'
+import BoardGame from './BoardGame'
 class Game extends React.Component {
+    constructor(props) {
+        super(props)
+    }
     render() {
-       let gameMode = this.props.gameState.gameMode;
+        let gameMode = this.props.gameState.gameMode
 
         return (
-            <View>
-                <Text>{gameMode}</Text>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <BoardGame />
             </View>
         )
     }

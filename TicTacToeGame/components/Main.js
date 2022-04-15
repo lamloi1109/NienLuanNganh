@@ -10,9 +10,10 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUser, setGameMode } from '../redux/actions/index'
+import { fetchUser, setGameMode,connectionStatusChange } from '../redux/actions/index'
 import Icon from 'react-native-vector-icons/Ionicons'
 import auth from '@react-native-firebase/auth'
+import NetInfo from '@react-native-community/netinfo'
 var Sound = require('react-native-sound')
 
 class Main extends Component {
@@ -24,8 +25,15 @@ class Main extends Component {
         this.props.navigation.navigate(txt)
     }
     componentDidMount() {
-        // console.log(this.props)
+        this.NetInfoSubcribtion = NetInfo.addEventListener((state) => {
+            this.props.connectionStatusChange(state.isConnected)
+        })
         this.props.fetchUser()
+      
+    }
+    componentWillUnmount(){
+        this.NetInfoSubscribtion && this.NetInfoSubscribtion();
+        console.log(NetInfo.isConnected);
     }
     state = {
         modalVisible: false,
@@ -68,12 +76,12 @@ class Main extends Component {
             })
         }
         let userName = ''
-
         if (this.props.userState.currentUser === null) {
             return <View></View>
         } else {
             userName = this.props.userState.currentUser.name
         }
+
         return (
             <View
                 style={{
@@ -81,6 +89,7 @@ class Main extends Component {
                     backgroundColor: 'white',
                 }}
             >
+                {/* Modal Settings */}
                 <Modal
                     animationType="fade"
                     transparent={true}
@@ -206,8 +215,9 @@ class Main extends Component {
                         </View>
                     </View>
                 </Modal>
+                {/* Modal Error connection */}
                 <Modal
-                    visible={!this.props.connection_status}
+                    visible={!this.props.gameState.connection_status}
                     transparent={true}
                     animationInTiming={600} 
                 >
@@ -303,7 +313,9 @@ class Main extends Component {
                         }}
                         onPress={() => this.setModalVisible(true)}
                     >
-                        <Icon name="settings-outline" size={30} />
+                        <Icon name="settings-outline" size={30} style={{
+                            color: 'black'
+                        }} />
                     </Pressable>
                     <Image
                         source={{
@@ -576,11 +588,10 @@ class Main extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log(state.userState)
     return { userState: state.userState, gameState: state.gameState }
 }
 
 const mapDispatchToProps = (dispatch) =>
-    bindActionCreators({ fetchUser, setGameMode }, dispatch)
+    bindActionCreators({ fetchUser, setGameMode,connectionStatusChange }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

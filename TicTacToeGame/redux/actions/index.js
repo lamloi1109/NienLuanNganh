@@ -1,11 +1,10 @@
 import firebase from '@react-native-firebase/app'
-import { USER_STATE_CHANGE,SET_GAME_MODE, GET_GAME_MODE  } from '../contants/index'
+import { USER_STATE_CHANGE,SET_GAME_MODE, CONNECTION_STATUS_CHANGE  } from '../contants/index'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 export function fetchUser() {
     return (dispatch, getState) => {
         const stateBefore = getState()
-        // console.log(stateBefore);
         firestore()
         .collection("users")
         .doc(auth().currentUser.uid)
@@ -21,7 +20,6 @@ export function fetchUser() {
             }
         })
         const stateAfter = getState()
-        // console.log(stateAfter);
     }
 }
 
@@ -29,12 +27,21 @@ export function fetchUser() {
 export function setGameMode(gameMode) {
     return (dispatch, getState) => {
         const stateBefore = getState()
-        // console.log(stateBefore);
         dispatch({
             type: SET_GAME_MODE,
             gameMode: gameMode
         })
         const stateAfter = getState()
-        // console.log(stateAfter);
+    }
+}
+
+export function connectionStatusChange(connection_status) {
+    return (dispatch, getState) => {
+        const stateBefore = getState()
+        dispatch({
+            type: CONNECTION_STATUS_CHANGE,
+            connection_status: connection_status
+        })
+        const stateAfter = getState()
     }
 }

@@ -1,15 +1,20 @@
-import {SET_GAME_MODE, GET_GAME_MODE} from '../contants/index'
+import {SET_GAME_MODE, CONNECTION_STATUS_CHANGE} from '../contants/index'
 const initializeState = {
-    gameMode: null
+    gameMode: null,
+    connection_status: true,
 }
 
 export const gameReducer = (state = initializeState, action) => {
     switch(action.type){
            case SET_GAME_MODE: 
-            console.log(action);
             return {
                 ...state,
                 gameMode: action.gameMode
+            }
+            case CONNECTION_STATUS_CHANGE: 
+            return {
+                ...state,
+                connection_status: action.connection_status
             }     
         default:
             return state;
