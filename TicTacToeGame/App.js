@@ -90,12 +90,19 @@ class App extends React.Component {
                             <Stack.Screen
                                 name="SignUp"
                                 component={SignUpScreen}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
                             />
                             <Stack.Screen
                                 name="Login"
                                 component={LoginScreen}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
                             />
-                            {/* <Stack.Screen name="Main" component={MainScreen} /> */}
                         </Stack.Navigator>
                     </NavigationContainer>
                     <Toast ref={(ref) => (global['toast'] = ref)} />

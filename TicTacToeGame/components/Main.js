@@ -81,7 +81,6 @@ class Main extends Component {
         } else {
             userName = this.props.userState.currentUser.name
         }
-
         return (
             <View
                 style={{

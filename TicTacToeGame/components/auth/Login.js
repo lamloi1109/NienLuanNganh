@@ -7,7 +7,7 @@ import {
     View,
     Text,
 } from 'react-native'
-import {SigninSchema} from '../Validation'
+import { SigninSchema } from './Validation/Validation'
 import auth from '@react-native-firebase/auth'
 import { Formik } from 'formik'
 
@@ -18,7 +18,11 @@ export default class Login extends React.Component {
             email: '',
             password: '',
         }
+        this.navigate = this.navigate.bind(this)
         this.handleOnSignIn = this.handleOnSignIn.bind(this)
+    }
+    navigate(txt) {
+        this.props.navigation.navigate(txt)
     }
     handleOnSignIn() {
         console.log('signin')
@@ -39,32 +43,37 @@ export default class Login extends React.Component {
                 if (error.code === 'auth/invalid-email') {
                     console.log('That email address is invalid!')
                     toast.show('That email address is invalid!', {
-                      type: 'warning ',
-                      placement: 'bottom',
-                      duration: 4000,
-                      offset: 30,
-                      animationType: 'slide-in',
-                  })
+                        type: 'warning ',
+                        placement: 'bottom',
+                        duration: 4000,
+                        offset: 30,
+                        animationType: 'slide-in',
+                    })
                 }
                 if (error.code === 'auth/wrong-password') {
-                    console.log('The password is invalid or the user does not have a password.')
-                    toast.show('The password is invalid or the user does not have a password.', {
-                      type: 'warning ',
-                      placement: 'bottom',
-                      duration: 4000,
-                      offset: 30,
-                      animationType: 'slide-in',
-                  })
+                    console.log(
+                        'The password is invalid or the user does not have a password.'
+                    )
+                    toast.show(
+                        'The password is invalid or the user does not have a password.',
+                        {
+                            type: 'warning ',
+                            placement: 'bottom',
+                            duration: 4000,
+                            offset: 30,
+                            animationType: 'slide-in',
+                        }
+                    )
                 }
                 if (error.code === 'auth/user-not-found') {
                     console.log('User doesnot exist.')
                     toast.show('User doesnot exist.', {
-                      type: 'warning ',
-                      placement: 'bottom',
-                      duration: 4000,
-                      offset: 30,
-                      animationType: 'slide-in',
-                  })
+                        type: 'warning ',
+                        placement: 'bottom',
+                        duration: 4000,
+                        offset: 30,
+                        animationType: 'slide-in',
+                    })
                 }
                 // console.error(error)
             })
@@ -72,8 +81,14 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <Text style={styles.heading}>SignIn Screen</Text>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior="padding"
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+                <View style={styles.textContainer}>
+                    <Text style={styles.heading}>Log In</Text>
+                </View>
                 <Formik
                     initialValues={{
                         email: '',
@@ -98,26 +113,33 @@ export default class Login extends React.Component {
                     }) => (
                         <>
                             <View style={styles.inputContainer}>
+                                <Text style={styles.text}>Email</Text>
                                 <TextInput
                                     placeholder="Email"
-                                    // value={this.state.email}
-                                    // onChangeText={(email) =>
-                                    //     this.setState({ email })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
+                                    value={this.state.email}
+                                    onChangeText={(email) =>
+                                        this.setState({ email })
+                                    }
                                     onChangeText={handleChange('email')}
                                     onBlur={handleBlur('email')}
                                     value={values.email}
                                     style={styles.input}
                                 />
                                 {errors.email && touched.email ? (
-                                    <Text>{errors.email}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.email}
+                                    </Text>
                                 ) : null}
+                                <Text style={styles.text}>Password</Text>
+
                                 <TextInput
                                     placeholder="Password"
-                                    // value={this.state.password}
-                                    // onChangeText={(password) =>
-                                    //     this.setState({ password })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
+                                    value={this.state.password}
+                                    onChangeText={(password) =>
+                                        this.setState({ password })
+                                    }
                                     onChangeText={handleChange('password')}
                                     onBlur={handleBlur('password')}
                                     value={values.password}
@@ -125,7 +147,9 @@ export default class Login extends React.Component {
                                     secureTextEntry
                                 />
                                 {errors.password && touched.password ? (
-                                    <Text>{errors.password}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.password}
+                                    </Text>
                                 ) : null}
                             </View>
                             <View style={styles.buttonContainer}>
@@ -133,8 +157,28 @@ export default class Login extends React.Component {
                                     onPress={handleSubmit}
                                     style={styles.button}
                                 >
-                                    <Text style={styles.buttonText}>
-                                        Login
+                                    <Text style={styles.buttonText}>Login</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.signUpContainer}>
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            fontSize: 20,
+                                            textAlign: 'center',
+                                        },
+                                    ]}
+                                >
+                                    Don't have an account?
+                                </Text>
+                                <TouchableOpacity
+                                      onPress={() => {
+                                        this.navigate('SignUp')
+                                    }}
+                                >
+                                    <Text style={styles.signUpText}>
+                                        Sign Up
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -150,10 +194,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
     },
     inputContainer: {
         width: '80%',
         marginTop: 30,
+    },
+    textContainer: {
+        width: '80%',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
     },
     input: {
         backgroundColor: 'white',
@@ -161,16 +211,31 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         margin: 10,
         borderRadius: 5,
+        color: '#6C6C6C',
+        borderColor: '#C7C7C7',
+        borderWidth: 2,
     },
     buttonContainer: {
-        width: '50%',
+        width: '80%',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 30,
+        marginTop: 30,
+    },
+    signUpContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: 10,
+        borderTopWidth: 2,
+        borderTopColor: '#ECECEC'
+    },
+    signUpText: {
+        color: '#2A76BF',
+        margin: 10,
+        fontSize: 20
     },
     button: {
         width: '100%',
-        backgroundColor: '#006D6A',
+        backgroundColor: '#0085FF',
         padding: 10,
         textAlign: 'center',
         margin: 5,
@@ -190,11 +255,23 @@ const styles = StyleSheet.create({
     },
     buttonOutlineText: {
         textAlign: 'center',
-        color: '#006D6A',
         fontWeight: '700',
         fontSize: 16,
+        color: 'black',
     },
     heading: {
         fontSize: 40,
+        color: '#121212',
+        textAlign: 'left',
+    },
+    text: {
+        color: '#5E5E5E',
+        marginLeft: 10,
+        marginTop: 5,
+    },
+    textMessage: {
+        color: 'red',
+        marginLeft: 10,
+        marginTop: 5,
     },
 })

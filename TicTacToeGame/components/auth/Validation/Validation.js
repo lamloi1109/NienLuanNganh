@@ -3,8 +3,7 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 
 
-const SignupSchema = Yup.object().shape({
-    //
+export const SignupSchema = Yup.object().shape({
     name: Yup.string()
         .matches(/\w*[a-z]\w*/, 'Name must have a small letter')
         .matches(/\w*[A-Z]\w*/, 'Name must have a capital letter')

@@ -7,10 +7,10 @@ import {
     View,
     Text,
 } from 'react-native'
-import {SignupSchema} from '../Validation'
+import { SignupSchema } from './Validation/Validation'
 import auth from '@react-native-firebase/auth'
 import { Formik } from 'formik'
-import firestore from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore'
 export default class SignUp extends React.Component {
     constructor(props) {
         super(props)
@@ -19,20 +19,24 @@ export default class SignUp extends React.Component {
             password: '',
             name: '',
         }
+        this.navigate = this.navigate.bind(this)
 
         this.handleOnSignUp = this.handleOnSignUp.bind(this)
     }
+    navigate(txt) {
+        this.props.navigation.navigate(txt)
+    }
     handleOnSignUp() {
-        const {name, email, password } = this.state
+        const { name, email, password } = this.state
         auth()
             .createUserWithEmailAndPassword(email, password)
             .then(() => {
                 firestore()
-                    .collection("users")
+                    .collection('users')
                     .doc(auth().currentUser.uid)
                     .set({
                         name,
-                        email
+                        email,
                     })
                 console.log('User account created & signed in!')
                 toast.show('Task finished successfully', {
@@ -62,8 +66,13 @@ export default class SignUp extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <Text style={styles.heading}>Register Screen</Text>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+                <View style={styles.textContainer}>
+                    <Text style={styles.heading}>Sign Up</Text>
+                </View>
                 <Formik
                     initialValues={{
                         name: '',
@@ -91,40 +100,44 @@ export default class SignUp extends React.Component {
                     }) => (
                         <>
                             <View style={styles.inputContainer}>
+                                <Text style={styles.text}>Name</Text>
                                 <TextInput
                                     placeholder="Name"
-                                    // value={this.state.name}
-                                    // onChangeText={(name) =>
-                                    //     this.setState({ name })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
                                     onChangeText={handleChange('name')}
                                     onBlur={handleBlur('name')}
                                     value={values.name}
                                     style={styles.input}
                                 />
                                 {errors.name && touched.name ? (
-                                    <Text>{errors.name}</Text>
+                                    <Text style={styles.textMessage}>{errors.name}</Text>
                                 ) : null}
+                                <Text style={styles.text}>Email</Text>
+
                                 <TextInput
                                     placeholder="Email"
-                                    // value={this.state.email}
-                                    // onChangeText={(email) =>
-                                    //     this.setState({ email })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
+                                    value={this.state.email}
+                                    onChangeText={(email) =>
+                                        this.setState({ email })
+                                    }
                                     onChangeText={handleChange('email')}
                                     onBlur={handleBlur('email')}
                                     value={values.email}
                                     style={styles.input}
                                 />
                                 {errors.email && touched.email ? (
-                                    <Text>{errors.email}</Text>
+                                    <Text style={styles.textMessage}>{errors.email}</Text>
                                 ) : null}
+                                <Text style={styles.text}>Password</Text>
+
                                 <TextInput
                                     placeholder="Password"
-                                    // value={this.state.password}
-                                    // onChangeText={(password) =>
-                                    //     this.setState({ password })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
+                                    value={this.state.password}
+                                    onChangeText={(password) =>
+                                        this.setState({ password })
+                                    }
                                     onChangeText={handleChange('password')}
                                     onBlur={handleBlur('password')}
                                     value={values.password}
@@ -132,14 +145,17 @@ export default class SignUp extends React.Component {
                                     secureTextEntry
                                 />
                                 {errors.password && touched.password ? (
-                                    <Text>{errors.password}</Text>
+                                    <Text style={styles.textMessage}>{errors.password}</Text>
                                 ) : null}
+                                <Text style={styles.text}>Confirm Password</Text>
+
                                 <TextInput
                                     placeholder="Confirm Password"
-                                    // value={this.state.password}
-                                    // onChangeText={(password) =>
-                                    //     this.setState({ password })
-                                    // }
+                                    placeholderTextColor="#C7C7C7"
+                                    value={this.state.password}
+                                    onChangeText={(password) =>
+                                        this.setState({ password })
+                                    }
                                     onChangeText={handleChange(
                                         'confirmPassword'
                                     )}
@@ -150,17 +166,38 @@ export default class SignUp extends React.Component {
                                 />
                                 {errors.confirmPassword &&
                                 touched.confirmPassword ? (
-                                    <Text>{errors.confirmPassword}</Text>
+                                    <Text style={styles.textMessage}>{errors.confirmPassword}</Text>
                                 ) : null}
                             </View>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity
-                                    // onPress={this.handleOnSignUp}
                                     onPress={handleSubmit}
                                     style={styles.button}
                                 >
                                     <Text style={styles.buttonText}>
-                                        Signup
+                                        Sign Up
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.signInContainer}>
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            fontSize: 20,
+                                            textAlign: 'center',
+                                        },
+                                    ]}
+                                >
+                                    Already have an account?
+                                </Text>
+                                <TouchableOpacity
+                                      onPress={() => {
+                                        this.navigate('SignUp')
+                                    }}
+                                >
+                                    <Text style={styles.signInText}>
+                                        Sign In
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -176,6 +213,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
     },
     inputContainer: {
         width: '80%',
@@ -187,16 +225,36 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         margin: 10,
         borderRadius: 5,
+        color: '#6C6C6C',
+        borderColor: '#C7C7C7',
+        borderWidth: 2,
     },
     buttonContainer: {
-        width: '50%',
+        width: '80%',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 30,
+        marginTop: 30,
+    },
+    textContainer: {
+        width: '80%',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+    },
+    signInContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: 10,
+        borderTopWidth: 2,
+        borderTopColor: '#ECECEC'
+    },
+    signInText: {
+        color: '#2A76BF',
+        margin: 10,
+        fontSize: 20
     },
     button: {
         width: '100%',
-        backgroundColor: '#006D6A',
+        backgroundColor: '#0085FF',
         padding: 10,
         textAlign: 'center',
         margin: 5,
@@ -222,5 +280,17 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontSize: 40,
+        color: '#121212',
+        textAlign: 'left',
+    },
+    text: {
+        color: '#5E5E5E',
+        marginLeft: 10,
+        marginTop: 5,
+    },
+    textMessage: {
+        color: 'red',
+        marginLeft: 10,
+        marginTop: 5,
     },
 })
