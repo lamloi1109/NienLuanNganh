@@ -31,21 +31,35 @@ export default class SignUp extends React.Component {
         auth()
             .createUserWithEmailAndPassword(email, password)
             .then(() => {
-                firestore()
-                    .collection('users')
-                    .doc(auth().currentUser.uid)
-                    .set({
-                        name,
-                        email,
+                auth()
+                    .currentUser.sendEmailVerification()
+                    .then(() => {
+                        firestore()
+                            .collection('users')
+                            .doc(auth().currentUser.uid)
+                            .set({
+                                name,
+                                email,
+                            })
+                        console.log('User account created & signed in!')
+                        toast.show('Task finished successfully', {
+                            type: 'success',
+                            placement: 'bottom',
+                            duration: 4000,
+                            offset: 30,
+                            animationType: 'slide-in',
+                        })
                     })
-                console.log('User account created & signed in!')
-                toast.show('Task finished successfully', {
-                    type: 'success',
-                    placement: 'bottom',
-                    duration: 4000,
-                    offset: 30,
-                    animationType: 'slide-in',
-                })
+                    .catch((error) => {
+                        console.log(error)
+                        toast.show(error, {
+                            type: 'success',
+                            placement: 'bottom',
+                            duration: 4000,
+                            offset: 30,
+                            animationType: 'slide-in',
+                        })
+                    })
             })
             .catch((error) => {
                 if (error.code === 'auth/email-already-in-use') {
@@ -59,8 +73,15 @@ export default class SignUp extends React.Component {
                 }
                 if (error.code === 'auth/invalid-email') {
                     console.log('That email address is invalid!')
+                    toast.show('That email address is invalid!', {
+                        type: 'warning ',
+                        placement: 'bottom',
+                        duration: 4000,
+                        offset: 30,
+                        animationType: 'slide-in',
+                    })
                 }
-                console.error(error)
+                // console.error(error)
             })
     }
 
@@ -110,7 +131,9 @@ export default class SignUp extends React.Component {
                                     style={styles.input}
                                 />
                                 {errors.name && touched.name ? (
-                                    <Text style={styles.textMessage}>{errors.name}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.name}
+                                    </Text>
                                 ) : null}
                                 <Text style={styles.text}>Email</Text>
 
@@ -127,7 +150,9 @@ export default class SignUp extends React.Component {
                                     style={styles.input}
                                 />
                                 {errors.email && touched.email ? (
-                                    <Text style={styles.textMessage}>{errors.email}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.email}
+                                    </Text>
                                 ) : null}
                                 <Text style={styles.text}>Password</Text>
 
@@ -145,9 +170,13 @@ export default class SignUp extends React.Component {
                                     secureTextEntry
                                 />
                                 {errors.password && touched.password ? (
-                                    <Text style={styles.textMessage}>{errors.password}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.password}
+                                    </Text>
                                 ) : null}
-                                <Text style={styles.text}>Confirm Password</Text>
+                                <Text style={styles.text}>
+                                    Confirm Password
+                                </Text>
 
                                 <TextInput
                                     placeholder="Confirm Password"
@@ -166,7 +195,9 @@ export default class SignUp extends React.Component {
                                 />
                                 {errors.confirmPassword &&
                                 touched.confirmPassword ? (
-                                    <Text style={styles.textMessage}>{errors.confirmPassword}</Text>
+                                    <Text style={styles.textMessage}>
+                                        {errors.confirmPassword}
+                                    </Text>
                                 ) : null}
                             </View>
                             <View style={styles.buttonContainer}>
@@ -192,8 +223,8 @@ export default class SignUp extends React.Component {
                                     Already have an account?
                                 </Text>
                                 <TouchableOpacity
-                                      onPress={() => {
-                                        this.navigate('SignUp')
+                                    onPress={() => {
+                                        this.navigate('Login')
                                     }}
                                 >
                                     <Text style={styles.signInText}>
@@ -245,12 +276,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 10,
         borderTopWidth: 2,
-        borderTopColor: '#ECECEC'
+        borderTopColor: '#ECECEC',
     },
     signInText: {
         color: '#2A76BF',
         margin: 10,
-        fontSize: 20
+        fontSize: 20,
     },
     button: {
         width: '100%',
