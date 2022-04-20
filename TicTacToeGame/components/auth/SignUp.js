@@ -52,13 +52,6 @@ export default class SignUp extends React.Component {
                     })
                     .catch((error) => {
                         console.log(error)
-                        toast.show(error, {
-                            type: 'success',
-                            placement: 'bottom',
-                            duration: 4000,
-                            offset: 30,
-                            animationType: 'slide-in',
-                        })
                     })
             })
             .catch((error) => {

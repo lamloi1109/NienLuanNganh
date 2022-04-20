@@ -82,7 +82,7 @@ class App extends React.Component {
                 </View>
             )
         }
-        // if (!loggedIn) {
+        if (!loggedIn) {
             return (
                 <>
                     <NavigationContainer>
@@ -108,42 +108,43 @@ class App extends React.Component {
                     <Toast ref={(ref) => (global['toast'] = ref)} />
                 </>
             )
-        // }
-        // return (
-        //     <>
-        //         <Provider store={store}>
-        //             <NavigationContainer>
-        //                 <Stack.Navigator initialRouteName="Main">
-        //                     <Stack.Screen
-        //                         name="Main"
-        //                         component={MainScreen}
-        //                         {...this.state}
-        //                         options={{
-        //                             headerShown: false,
-        //                             headerTransparent: true,
-        //                         }}
-        //                     />
-        //                     <Stack.Screen
-        //                         name="VsMachine"
-        //                         component={GameScreen}
-        //                         options={{
-        //                             headerShown: false,
-        //                             headerTransparent: true,
-        //                         }}
-        //                     />
-        //                     <Stack.Screen
-        //                         name="Multiplay"
-        //                         component={GameScreen}
-        //                         options={{
-        //                             headerShown: false,
-        //                             headerTransparent: true,
-        //                         }}
-        //                     />
-        //                 </Stack.Navigator>
-        //             </NavigationContainer>
-        //         </Provider>
-        //     </>
-        // )
+        }
+        return (
+            <>
+                <Provider store={store}>
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName="Main">
+                            <Stack.Screen
+                                name="Main"
+                                component={MainScreen}
+                                {...this.state}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="VsMachine"
+                                component={GameScreen}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="Multiplay"
+                                component={GameScreen}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
+                            />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </Provider>
+                <Toast ref={(ref) => (global['toast'] = ref)} />
+            </>
+        )
     }
 }
 

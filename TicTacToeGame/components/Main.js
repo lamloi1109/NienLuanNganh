@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import auth from '@react-native-firebase/auth'
 import NetInfo from '@react-native-community/netinfo'
 var Sound = require('react-native-sound')
-
+import Verify from './auth/Verify'
 class Main extends Component {
     constructor(props) {
         super(props)
@@ -29,7 +29,7 @@ class Main extends Component {
             this.props.connectionStatusChange(state.isConnected)
         })
         this.props.fetchUser()
-      
+        console.log("Verify: "+auth().currentUser.emailVerified)
     }
     componentWillUnmount(){
         this.NetInfoSubscribtion && this.NetInfoSubscribtion();
@@ -76,10 +76,17 @@ class Main extends Component {
             })
         }
         let userName = ''
+        if(!auth().currentUser.emailVerified){
+            console.log("dsads");
+            return(
+                    <Verify/>
+            )
+        }
         if (this.props.userState.currentUser === null) {
             return <View></View>
         } else {
             userName = this.props.userState.currentUser.name
+            console.log(this.props.userState.currentUser)
         }
         return (
             <View
@@ -318,7 +325,7 @@ class Main extends Component {
                     </Pressable>
                     <Image
                         source={{
-                            uri: 'https://images.unsplash.com/photo-1649217707439-eb9ca4e9c62f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1936&q=80',
+                            uri: 'https://cdn-icons.flaticon.com/png/512/4681/premium/4681761.png?token=exp=1650444251~hmac=13879ae15bf373b7b7dc95708c1bdef3',
                         }}
                         style={{
                             width: 50,
