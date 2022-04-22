@@ -1,6 +1,10 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Linking, Image } from 'react-native'
-export default function Verify() {
+import { View, Text, TouchableOpacity, Linking, Image, NativeModules } from 'react-native'
+import auth from '@react-native-firebase/auth'
+export default function Verify(user) {
+    const email = user.user.email
+    const VerifyStatus = user.user.emailVerified
+    console.log(VerifyStatus)
     return (
         <View
             style={{
@@ -31,14 +35,23 @@ export default function Verify() {
             </Text>
             <Text
                 style={{
-                    width: '80%',
+                    width: '70%',
                     fontSize: 16,
                     marginBottom: 20,
-                    textAlign: 'center'
+                    textAlign: 'center',
                 }}
             >
                 To confirm your email address, tap the button in the email we
-                sent to ...
+                sent to {email}
+            </Text>
+            <Text
+                style={{
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                    marginBottom: 20,
+                }}
+            >
+                Verify Status: {VerifyStatus+""}
             </Text>
             <TouchableOpacity
                 onPress={() => {
@@ -58,6 +71,32 @@ export default function Verify() {
                     }}
                 >
                     Open Email App
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    auth()
+                    .signOut()
+                    .then(() =>
+                        console.log('User signed out!')
+                    )
+                    NativeModules.DevSettings.reload();
+                }}
+                style={{
+                    marginTop:20,
+                    backgroundColor: 'black',
+                    padding: 20,
+                    width: '50%',
+                    borderRadius: 10,
+                }}
+            >
+                <Text
+                    style={{
+                        color: 'white',
+                        textAlign: 'center',
+                    }}
+                >
+                    Sign Out
                 </Text>
             </TouchableOpacity>
         </View>

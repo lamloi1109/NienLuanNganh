@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 import com.android.build.OutputFile
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -229,9 +230,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.implementation
     into 'libs'
 }
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 project.ext.vectoricons = [
-    iconFontNames: ['Ionicons.ttf' ]
+    iconFontNames: [ 'MaterialIcons.ttf', 'FontAwesome.ttf', 'MaterialCommunityIcons.ttf', 'Ionicons.ttf'] // Name of the font files you want to copy
 ]
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

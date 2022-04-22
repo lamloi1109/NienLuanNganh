@@ -76,10 +76,11 @@ class Main extends Component {
             })
         }
         let userName = ''
+        console.log(auth().currentUser.emailVerified)
         if(!auth().currentUser.emailVerified){
-            console.log("dsads");
+            console.log(auth().currentUser.emailVerified)
             return(
-                    <Verify/>
+                    <Verify user={auth().currentUser}/>
             )
         }
         if (this.props.userState.currentUser === null) {

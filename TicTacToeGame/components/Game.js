@@ -15,7 +15,7 @@ class Game extends React.Component {
             <View
                 style={{
                     flex: 1,
-                    backgroundColor: '#fff',
+                    backgroundColor: 'gray',
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
