@@ -10,7 +10,11 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUser, setGameMode,connectionStatusChange } from '../redux/actions/index'
+import {
+    fetchUser,
+    setGameMode,
+    connectionStatusChange,
+} from '../redux/actions/index'
 import Icon from 'react-native-vector-icons/Ionicons'
 import auth from '@react-native-firebase/auth'
 import NetInfo from '@react-native-community/netinfo'
@@ -29,11 +33,11 @@ class Main extends Component {
             this.props.connectionStatusChange(state.isConnected)
         })
         this.props.fetchUser()
-        console.log("Verify: "+auth().currentUser.emailVerified)
+        console.log('Verify: ' + auth().currentUser.emailVerified)
     }
-    componentWillUnmount(){
-        this.NetInfoSubscribtion && this.NetInfoSubscribtion();
-        console.log(NetInfo.isConnected);
+    componentWillUnmount() {
+        this.NetInfoSubscribtion && this.NetInfoSubscribtion()
+        console.log(NetInfo.isConnected)
     }
     state = {
         modalVisible: false,
@@ -77,11 +81,9 @@ class Main extends Component {
         }
         let userName = ''
         console.log(auth().currentUser.emailVerified)
-        if(!auth().currentUser.emailVerified){
+        if (!auth().currentUser.emailVerified) {
             console.log(auth().currentUser.emailVerified)
-            return(
-                    <Verify user={auth().currentUser}/>
-            )
+            return <Verify user={auth().currentUser} />
         }
         if (this.props.userState.currentUser === null) {
             return <View></View>
@@ -144,11 +146,12 @@ class Main extends Component {
                                     this.setModalVisible(!modalVisible)
                                 }
                             >
-                                <Icon
-                                    name="close-circle-outline"
-                                    size={30}
+
+                                <Image
+                                    source={require('../images/icons/cancel.png')}
                                     style={{
-                                        color: '#2196F3',
+                                        width: 30,
+                                        height: 30,
                                     }}
                                 />
                             </Pressable>
@@ -226,7 +229,7 @@ class Main extends Component {
                 <Modal
                     visible={!this.props.gameState.connection_status}
                     transparent={true}
-                    animationInTiming={600} 
+                    animationInTiming={600}
                 >
                     <View
                         style={{
@@ -239,13 +242,13 @@ class Main extends Component {
                         }}
                     >
                         <View
-                             style={{
+                            style={{
                                 backgroundColor: '#fff',
                                 paddingHorizontal: 16,
                                 paddingTop: 20,
                                 paddingBottom: 40,
                                 alignItems: 'center',
-                            }}  
+                            }}
                         >
                             <Text
                                 style={{
@@ -276,9 +279,9 @@ class Main extends Component {
                                     alignItems: 'center',
                                     marginTop: 10,
                                 }}
-                                onPress={() =>{
+                                onPress={() => {
                                     this.props.fetchUser()
-                                }} 
+                                }}
                                 disabled={this.props.loaded}
                             >
                                 <Text
@@ -303,8 +306,8 @@ class Main extends Component {
                 >
                     <Pressable
                         style={{
-                            backgroundColor: 'white',
                             borderRadius: 50,
+                            backgroundColor:'white',
                             shadowColor: '#000',
                             shadowOffset: {
                                 width: 0,
@@ -320,9 +323,16 @@ class Main extends Component {
                         }}
                         onPress={() => this.setModalVisible(true)}
                     >
-                        <Icon name="settings-outline" size={30} style={{
+                        {/* <Icon name="settings-outline" size={30} style={{
                             color: 'black'
-                        }} />
+                        }} /> */}
+                        <Image
+                            source={require('../images/icons/setting.png')}
+                            style={{
+                                width: 30,
+                                height: 30,
+                            }}
+                        />
                     </Pressable>
                     <Image
                         source={{
@@ -599,6 +609,9 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) =>
-    bindActionCreators({ fetchUser, setGameMode,connectionStatusChange }, dispatch)
+    bindActionCreators(
+        { fetchUser, setGameMode, connectionStatusChange },
+        dispatch
+    )
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
