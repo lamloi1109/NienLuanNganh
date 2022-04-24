@@ -35,7 +35,7 @@ export default class BoardGame extends React.Component {
         let count_down = 0
         let count_right_up = 0
         let count_left_down = 0
-        let count_right_down = 0
+        let count_right_down = 1
         let count_left_up = 0
         let isWin = false
         let temp1 = 0
@@ -83,6 +83,9 @@ export default class BoardGame extends React.Component {
             if (board[l][currentCol + temp1] === Value) {
                 count_right_up++
                 temp1++
+            } else if (board[l][currentCol - temp1] === Value) {
+                count_left_up++
+                temp1++
             } else {
                 break
             }
@@ -92,6 +95,9 @@ export default class BoardGame extends React.Component {
             if (board[g][currentCol - temp2] === Value) {
                 count_left_down++
                 temp2++
+            } else if (board[g][currentCol + temp2] === Value) {
+                count_right_down++
+                temp2++
             } else {
                 break
             }
@@ -99,25 +105,6 @@ export default class BoardGame extends React.Component {
         //
         //
         //
-        for (let i = currentRow; i >= 0; i--) {
-            if (board[i][currentCol - temp1] === Value) {
-                console.log("Trai LEn")
-                count_left_up++
-                temp1++
-            } else {
-                break
-            }
-        }
-        //
-        // for (let j = currentRow + 1; j < board.length; j++) {
-        //     console.log("Phai Xuong",count_right_down,temp2)
-        //     if (board[j][currentCol + temp2] === Value) {
-        //         count_right_down++
-        //         temp2++
-        //     } else {
-        //         break
-        //     }
-        // }
 
         // Kiểm tra điều kiện thắng
         if (
@@ -216,31 +203,31 @@ export default class BoardGame extends React.Component {
                 </View>
             )
         })
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    backgroundColor: 'gray',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                {rowMaps.map((element) => {
-                    return element
-                })}
-                <TouchableOpacity
-                    onPress={() => {
-                        this.setBoard(this.state.size)
-                        this.setState({
-                            isWin: !this.state.isWin
-                        })
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'gray',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
-                    style={styles.button}
                 >
-                    <Text>Reset</Text>
-                </TouchableOpacity>
-            </View>
-        )
+                    {rowMaps.map((element) => {
+                        return element
+                    })}
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.setBoard(this.state.size)
+                            this.setState({
+                                isWin: !this.state.isWin,
+                            })
+                        }}
+                        style={styles.button}
+                    >
+                        <Text>Reset</Text>
+                    </TouchableOpacity>
+                </View>
+            )       
     }
 }
 

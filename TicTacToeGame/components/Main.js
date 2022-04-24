@@ -7,6 +7,7 @@ import {
     ImageBackground,
     Modal,
     Switch,
+    StatusBar
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -98,6 +99,12 @@ class Main extends Component {
                     backgroundColor: 'white',
                 }}
             >
+                <StatusBar
+                    animated={true}
+                    backgroundColor="#61dafb"
+                    showHideTransition={true}
+                    hidden={true}
+                />
                 {/* Modal Settings */}
                 <Modal
                     animationType="fade"
@@ -146,7 +153,6 @@ class Main extends Component {
                                     this.setModalVisible(!modalVisible)
                                 }
                             >
-
                                 <Image
                                     source={require('../images/icons/cancel.png')}
                                     style={{
@@ -307,7 +313,7 @@ class Main extends Component {
                     <Pressable
                         style={{
                             borderRadius: 50,
-                            backgroundColor:'white',
+                            backgroundColor: 'white',
                             shadowColor: '#000',
                             shadowOffset: {
                                 width: 0,

@@ -5,6 +5,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    StatusBar,
     Text,
 } from 'react-native'
 import { SignupSchema } from './Validation/Validation'
@@ -84,6 +85,12 @@ export default class SignUp extends React.Component {
                 style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
+                 <StatusBar
+                    animated={true}
+                    backgroundColor="#61dafb"
+                    showHideTransition={true}
+                    hidden={true}
+                />
                 <View style={styles.textContainer}>
                     <Text style={styles.heading}>Sign Up</Text>
                 </View>

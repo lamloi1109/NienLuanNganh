@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     View,
     Text,
+    StatusBar
 } from 'react-native'
 import { SigninSchema } from './Validation/Validation'
 import auth from '@react-native-firebase/auth'
@@ -86,6 +87,12 @@ export default class Login extends React.Component {
                 behavior="padding"
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
+                <StatusBar
+                    animated={true}
+                    backgroundColor="#61dafb"
+                    showHideTransition={true}
+                    hidden={true}
+                />
                 <View style={styles.textContainer}>
                     <Text style={styles.heading}>Log In</Text>
                 </View>
@@ -173,7 +180,7 @@ export default class Login extends React.Component {
                                     Don't have an account?
                                 </Text>
                                 <TouchableOpacity
-                                      onPress={() => {
+                                    onPress={() => {
                                         this.navigate('SignUp')
                                     }}
                                 >
@@ -226,12 +233,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 10,
         borderTopWidth: 2,
-        borderTopColor: '#ECECEC'
+        borderTopColor: '#ECECEC',
     },
     signUpText: {
         color: '#2A76BF',
         margin: 10,
-        fontSize: 20
+        fontSize: 20,
     },
     button: {
         width: '100%',
