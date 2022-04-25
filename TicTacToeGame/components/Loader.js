@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
 import AnimatedLoader from 'react-native-animated-loader'
 
 export default class Loader extends React.Component {
@@ -10,6 +10,12 @@ export default class Loader extends React.Component {
         const { visible } = this.props
         return (
             <View style={styles.container}>
+                  <StatusBar
+                    animated={true}
+                    backgroundColor="#61dafb"
+                    showHideTransition={true}
+                    hidden={true}
+                />
                 <AnimatedLoader
                     visible={visible}
                     overlayColor="rgba(255,255,255,1)"

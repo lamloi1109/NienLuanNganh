@@ -17,7 +17,7 @@ import GameScreen from './components/Game'
 import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import Toast from 'react-native-toast-notifications'
-import { View, Text, BackHandler, Alert } from 'react-native'
+import { View, Text, BackHandler, Alert,StatusBar } from 'react-native'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers/index'
@@ -62,12 +62,14 @@ class App extends React.Component {
         return true
     }
     componentWillUnmount() {
-        // BackHandler.removeEventListener('hardwareBackPress', this.backAction)
-        this.backHandler.remove();
+        if(this.backHandler !== undefined){
+            this.backHandler.remove()
+
+        }
     }
 
     componentDidMount() {
-        BackHandler.addEventListener("hardwareBackPress", this.backAction);
+        BackHandler.addEventListener('hardwareBackPress', this.backAction)
         setInterval(() => {
             auth().onAuthStateChanged((user) => {
                 if (!user) {
