@@ -391,7 +391,8 @@ class Main extends Component {
                     >
                         <ImageBackground
                             source={{
-                                uri: 'https://phunugioi.com/wp-content/uploads/2021/11/Background-de-thuong-hoat-hinh.jpg',
+                                uri: 'https://img6.thuthuatphanmem.vn/uploads/2022/02/12/background-chat-luong-cho-powerpoint_100426266.jpg',
+
                             }}
                             style={{
                                 padding: 10,
@@ -424,7 +425,7 @@ class Main extends Component {
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                    Vs Machine
+                                   Play With Machine
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -464,7 +465,7 @@ class Main extends Component {
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                    Multiplay
+                                    Play Local Multiplayer
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -478,7 +479,7 @@ class Main extends Component {
                     >
                         <ImageBackground
                             source={{
-                                uri: 'https://phunugioi.com/wp-content/uploads/2021/11/Background-de-thuong-hoat-hinh.jpg',
+                                uri: 'https://img6.thuthuatphanmem.vn/uploads/2022/02/12/background-chat-luong-cho-powerpoint_100426266.jpg',
                             }}
                             style={{
                                 padding: 10,
@@ -511,7 +512,7 @@ class Main extends Component {
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                    Vs Machine
+                                   Play With Friend
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -545,12 +546,12 @@ class Main extends Component {
                                 }}
                                 onPress={() => {
                                     playPause()
-                                    this.props.setGameMode('Multiplay')
-                                    this.navigate('Multiplay')
+                                    this.props.setGameMode('Online')
+                                    this.navigate('Online')
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                    Multiplay
+                                    Play Online
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -566,7 +567,7 @@ class Main extends Component {
                     >
                         <ImageBackground
                             source={{
-                                uri: 'https://phunugioi.com/wp-content/uploads/2021/11/Background-de-thuong-hoat-hinh.jpg',
+                                uri: 'https://img6.thuthuatphanmem.vn/uploads/2022/02/12/background-chat-luong-cho-powerpoint_100426266.jpg',
                             }}
                             style={{
                                 padding: 10,
