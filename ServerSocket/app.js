@@ -41,26 +41,50 @@ app.use(function (err, req, res, next) {
 });
 //
 const io = socket(server);
-
+let arr = [];
+let users = [];
 // tạo kết nối giữa client và server
 io.on("connection", (socket) => {
   console.log("client connected on websocket");
-  socket.emit("getId", socket.id);
-  socket.on("sendDataClient", function (data) {
-    console.log(data);
-    socketIo.emit("sendDataServer", { data });
-  });
-
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
-  socket.on("users", function (sender, data) {
-    console.log("users : ", sender, data);
+  socket.on("users", function (data) {
+    users.push(data)
   });
+  console.log(users);
+  socket.on("sendBoardData", function (data) {
+    arr = data
+    console.log(data)
+  });
+  socket.on('message', function(data){
+    console.log(data)
+  })
+  socket.on('setBoard', function(size = 8){
+    let board = []
+    for (let i = 0; i < size; i++) {
+        let tmp = []
+        for (let j = 0; j < size; j++) {
+            tmp[j] = 0
+        }
+        board[i] = tmp
+    }
+    console.log(board)
+    arr = board
+  })
+
+  socket.emit('getBoard',arr)
 
   socket.on("join room", function (data) {
-    //THam gia phòng
+    console.log(data)
+    //THam gia phòng  
     socket.join(data);
+    socket.in(data).emit('connectToRoom', "You are in room no. "+data);
+    socket.in(data).emit('usersPlaying', users);
+  });
+  socket.on("disconnect", () => {
+    users.pop()
+    console.log("thoat")
   });
 });
 

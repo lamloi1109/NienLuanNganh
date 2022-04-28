@@ -4,10 +4,9 @@ export default class BoardGame extends React.Component {
     constructor(props) {
         super(props)
     }
-
     render() {
         let board = this.props.board
-        console.log(board)
+        const socket = this.props.socket
         let rowMaps = board.map((elementRow, indexRow) => {
             return (
                 <View
@@ -23,12 +22,12 @@ export default class BoardGame extends React.Component {
                                         indexRow,
                                         indexCol
                                     )
-                                    this.props.isWinner(
-                                        board,
-                                        indexRow,
-                                        indexCol,
-                                        board[indexRow][indexCol]
-                                    )
+                                    // this.props.isWinner(
+                                    //     board,
+                                    //     indexRow,
+                                    //     indexCol,
+                                    //     board[indexRow][indexCol]
+                                    // )
                                 }}
                                 key={indexCol}
                                 style={styles.button}
@@ -44,6 +43,47 @@ export default class BoardGame extends React.Component {
                 </View>
             )
         })
+        console.log(board)
+        console.log(this.props.socket) 
+        if(this.props.mode === "Online"){
+            rowMaps = board.map((elementRow, indexRow) => {
+                return (
+                    <View
+                        style={{ flexDirection: 'row', backgroundColor: 'gray' }}
+                        key={indexRow}
+                    >
+                        {elementRow.map((elementCol, indexCol) => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.drawMark(
+                                            board,
+                                            indexRow,
+                                            indexCol
+                                        )
+                                        socket.emit('sendBoardData',board)
+                                        // this.props.isWinner(
+                                        //     board,
+                                        //     indexRow,
+                                        //     indexCol,
+                                        //     board[indexRow][indexCol]
+                                        // )
+                                    }}
+                                    key={indexCol}
+                                    style={styles.button}
+                                >
+                                    {this.props.placeMark(
+                                        board,
+                                        indexRow,
+                                        indexCol
+                                    )}
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
+                )
+            })
+        }
         return (
             <View
                 style={{
