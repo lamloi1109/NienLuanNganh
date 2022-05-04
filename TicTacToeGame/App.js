@@ -15,6 +15,7 @@ import LoginScreen from './components/auth/Login'
 import LoadingScreen from './components/Loader'
 import GameScreen from './components/Game'
 import Test from './components/Test'
+import BoardSettings from './components/BoardSettings'
 import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import Toast from 'react-native-toast-notifications'
@@ -159,6 +160,14 @@ class App extends React.Component {
                              <Stack.Screen
                                 name="Online"
                                 component={Test}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
+                            />
+                             <Stack.Screen
+                                name="BoardSettings"
+                                component={BoardSettings}
                                 options={{
                                     headerShown: false,
                                     headerTransparent: true,

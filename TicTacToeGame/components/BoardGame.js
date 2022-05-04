@@ -22,12 +22,13 @@ export default class BoardGame extends React.Component {
                                         indexRow,
                                         indexCol
                                     )
-                                    // this.props.isWinner(
-                                    //     board,
-                                    //     indexRow,
-                                    //     indexCol,
-                                    //     board[indexRow][indexCol]
-                                    // )
+                                    this.props.isWinner(
+                                        board,
+                                        indexRow,
+                                        indexCol,
+                                        board[indexRow][indexCol],
+                                        this.props.sizeAlign
+                                    )
                                 }}
                                 key={indexCol}
                                 style={styles.button}

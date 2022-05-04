@@ -595,12 +595,11 @@ class Main extends Component {
                                 }}
                                 onPress={() => {
                                     playPause()
-                                    this.props.setGameMode('VsMachine')
-                                    this.navigate('VsMachine')
+                                    this.navigate('BoardSettings')
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                    Vs Machine
+                                    Board Settings
                                 </Text>
                             </Pressable>
                         </ImageBackground>

@@ -20,7 +20,8 @@ class Game extends React.Component {
             board: [],
             isWin: false,
             isCross: null,
-            size: 8,
+            size: this.props.gameState.board.sizeBoard,
+            sizeAlign: this.props.gameState.board.sizeAlign
         }
         this.navigate = this.navigate.bind(this)
         this.isWinner = this.isWinner.bind(this)
@@ -69,7 +70,7 @@ class Game extends React.Component {
         this.backHandler.remove()
     }
 
-    isWinner(board, currentRow, currentCol, Value) {
+    isWinner(board, currentRow, currentCol, Value, sizeAlign) {
         let count_left = 0
         let count_right = 0
         let count_up = 0
@@ -147,10 +148,10 @@ class Game extends React.Component {
 
         // Kiểm tra điều kiện thắng
         if (
-            count_right + count_left >= 5 ||
-            count_up + count_down >= 5 ||
-            count_right_up + count_left_down >= 5 ||
-            count_right_down + count_left_up >= 5
+            count_right + count_left >= sizeAlign ||
+            count_up + count_down >= sizeAlign ||
+            count_right_up + count_left_down >= sizeAlign ||
+            count_right_down + count_left_up >= sizeAlign
         ) {
             isWin = true
         }
@@ -224,7 +225,8 @@ class Game extends React.Component {
     }
 
     render() {
-        let gameMode = this.props.gameState.gameMode
+        let gameMode = this.props.gameState
+        console.log(gameMode)
         if (this.state.isCross === null) {
             return (
                 <View
@@ -440,6 +442,7 @@ class Game extends React.Component {
                                 placeMark={this.placeMark}
                                 drawMark={this.drawMark}
                                 isWinner={this.isWinner}
+                                sizeAlign={this.state.sizeAlign}
                             />
                              <View
                                 style={{

@@ -1,5 +1,5 @@
 import firebase from '@react-native-firebase/app'
-import { USER_STATE_CHANGE,SET_GAME_MODE, CONNECTION_STATUS_CHANGE  } from '../contants/index'
+import { USER_STATE_CHANGE,SET_GAME_MODE, CONNECTION_STATUS_CHANGE,SET_BOARD_GAME  } from '../contants/index'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 export function fetchUser() {
@@ -32,6 +32,21 @@ export function setGameMode(gameMode) {
             gameMode: gameMode
         })
         const stateAfter = getState()
+    }
+}
+
+export function setBoardGame(Board) {
+    return (dispatch, getState) => {
+        const stateBefore = getState()
+        console.log("SET BOARD")
+        dispatch({
+            type: SET_BOARD_GAME,
+            board: Board
+        })
+
+        const stateAfter = getState()
+        console.log(stateAfter)
+
     }
 }
 
