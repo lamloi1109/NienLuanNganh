@@ -1,4 +1,4 @@
-import {SET_GAME_MODE, CONNECTION_STATUS_CHANGE, ROOMS_STATE_CHANGE, SET_BOARD_GAME} from '../contants/index'
+import {SET_GAME_MODE, CONNECTION_STATUS_CHANGE, ROOMS_STATE_CHANGE, SET_BOARD_GAME, SET_SIZE_MARK} from '../contants/index'
 const initializeState = {
     gameMode: null,
     connection_status: true,
@@ -6,7 +6,9 @@ const initializeState = {
     board: {
         sizeBoard: 8,
         sizeAlign: 5
-    }
+    },
+    sizeMark: 40
+
 }
 
 export const gameReducer = (state = initializeState, action) => {
@@ -25,6 +27,11 @@ export const gameReducer = (state = initializeState, action) => {
             return {
                 ...state,
                 board: action.board
+            }
+            case SET_SIZE_MARK: 
+            return {
+                ...state,
+                sizeMark: action.sizeMark
             }
             case ROOMS_STATE_CHANGE: 
             return {

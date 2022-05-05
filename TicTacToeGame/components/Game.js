@@ -19,6 +19,7 @@ class Game extends React.Component {
         this.state = {
             board: [],
             isWin: false,
+            isDraw: false,
             isCross: null,
             size: this.props.gameState.board.sizeBoard,
             sizeAlign: this.props.gameState.board.sizeAlign
@@ -28,6 +29,7 @@ class Game extends React.Component {
         this.setBoard = this.setBoard.bind(this)
         this.drawMark = this.drawMark.bind(this)
         this.placeMark = this.placeMark.bind(this)
+        this.checkDraw = this.checkDraw.bind(this)
     }
     backAction = () => {
         Alert.alert('Quit Game ~~!', 'Are you sure you want to go back?', [
@@ -154,13 +156,34 @@ class Game extends React.Component {
             count_right_down + count_left_up >= sizeAlign
         ) {
             isWin = true
+            console.log("WINNN");
         }
         this.setState({
             isWin,
         })
         return isWin
     }
+    checkDraw(board){
+        if(this.state.win === true){
+            return false
+        }
+        let sum = 0
+        let size = board.length*board.length
+        for(let i = 0; i < board.length; i++){
+            for(let j = 0; j < board.length; j++){
+                if(board[i][j]){
+                    sum = sum + 1
+                }
+            }
+        }
+        console.log(sum,size)
 
+        if(sum === size){
+            console.log("DRAWWW")
+            return true
+        }   
+        return false
+    }
     drawMark(board, currentRow, currentCol) {
         if (board[currentRow][currentCol] == 0 && !this.state.isWin) {
             if (this.state.isCross) {
@@ -187,16 +210,15 @@ class Game extends React.Component {
         })
         this.setBoard(this.state.size)
     }
-    placeMark = (board, currentRow, currentCol) => {
-        console.log(board)
+    placeMark = (board, currentRow, currentCol,sizeMark) => {
         if (board.length > 0 && !this.state.isWin) {
             if (board[currentRow][currentCol] == 1)
                 return (
                     <Image
                         source={require('../images/icons/cross.png')}
                         style={{
-                            width: 40,
-                            height: 40,
+                            width: sizeMark,
+                            height: sizeMark,
                         }}
                     />
                 )
@@ -205,8 +227,8 @@ class Game extends React.Component {
                     <Image
                         source={require('../images/icons/circle.png')}
                         style={{
-                            width: 40,
-                            height: 40,
+                            width: sizeMark,
+                            height: sizeMark,
                         }}
                     />
                 )
@@ -214,13 +236,11 @@ class Game extends React.Component {
                 <Image
                     source={require('../images/icons/blank.png')}
                     style={{
-                        width: 40,
-                        height: 40,
+                        width: sizeMark,
+                        height: sizeMark,
                     }}
                 />
             )
-        } else{
-            console.log("error")
         }
     }
 
@@ -320,7 +340,7 @@ class Game extends React.Component {
                     showHideTransition={true}
                     hidden={true}
                 />
-                {this.state.isWin? (
+                {/* {this.state.isWin && !this.state.isDraw? (
                     <>
                         <View
                             style={{
@@ -384,10 +404,10 @@ class Game extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    </>
+                        </View> */}
+                    {/* </>
                 ) : (
-                    <>
+                    <> */}
                         <View>
                             <View
                                 style={{
@@ -443,6 +463,8 @@ class Game extends React.Component {
                                 drawMark={this.drawMark}
                                 isWinner={this.isWinner}
                                 sizeAlign={this.state.sizeAlign}
+                                sizeMark={this.props.gameState.sizeMark}
+                                checkDraw={this.checkDraw}
                             />
                              <View
                                 style={{
@@ -492,8 +514,8 @@ class Game extends React.Component {
                                 </>
                             </View>
                         </View>
-                    </>
-                )}
+                    {/* </>
+                )} */}
             </View>
         )
     }

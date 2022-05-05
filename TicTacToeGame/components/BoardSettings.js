@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Picker } from '@react-native-picker/picker'
 import { bindActionCreators } from 'redux'
-import { setBoardGame } from '../redux/actions/index'
+import { setBoardGame, setSizeMark } from '../redux/actions/index'
 class BoardSettings extends React.Component {
     constructor(props) {
         super(props)
@@ -15,10 +15,12 @@ class BoardSettings extends React.Component {
         }
         this.setSelectedSizeBoard = this.setSelectedSizeBoard.bind(this)
         this.setSelectedSizeAlign = this.setSelectedSizeAlign.bind(this)
+        this.changeSizeMark = this.changeSizeMark.bind(this)
 
         this.navigate = this.navigate.bind(this)
     }
     setSelectedSizeBoard(value) {
+        this.changeSizeMark(value)
         switch (value) {
             case 10:
             case 9:
@@ -33,7 +35,7 @@ class BoardSettings extends React.Component {
                         sizeAlign: 4,
                     },
                 })
-                return;
+                return
             case 3:
                 this.setState({
                     board: {
@@ -41,7 +43,7 @@ class BoardSettings extends React.Component {
                         sizeAlign: 3,
                     },
                 })
-                return;
+                return
             default:
                 this.setState({
                     board: {
@@ -49,8 +51,37 @@ class BoardSettings extends React.Component {
                         sizeAlign: this.state.board.sizeAlign,
                     },
                 })
-                return;
-            
+                return
+        }
+    }
+    changeSizeMark(sizeBoark) {
+        switch (sizeBoark) {
+            case 10:
+                this.props.setSizeMark(30)
+                return
+            case 9:
+                this.props.setSizeMark(35)
+                return
+            case 8:
+                this.props.setSizeMark(40)
+                return
+            case 7:
+                this.props.setSizeMark(45)
+                return
+            case 6:
+                this.props.setSizeMark(50)
+                return
+            case 5:
+                this.props.setSizeMark(55)
+                return
+            case 4:
+                this.props.setSizeMark(60)
+                return
+            case 3:
+                this.props.setSizeMark(65)
+                return
+            default:
+                return
         }
     }
     setSelectedSizeAlign(value) {
@@ -81,7 +112,7 @@ class BoardSettings extends React.Component {
                         }
                         mode={'dropdown'}
                     >
-                        <Picker.Item label="Size Board: 4" value={4} />
+                        <Picker.Item label="Size Align: 4" value={4} />
                         <Picker.Item label="Size Align: 5" value={5} />
                         <Picker.Item label="Size Align: 6" value={6} />
                     </Picker>
@@ -200,6 +231,6 @@ function mapStateToProps(state) {
     return { userState: state.userState, gameState: state.gameState }
 }
 const mapDispatchToProps = (dispatch) =>
-    bindActionCreators({ setBoardGame }, dispatch)
+    bindActionCreators({ setBoardGame, setSizeMark }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(BoardSettings)

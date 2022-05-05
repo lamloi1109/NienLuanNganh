@@ -29,6 +29,7 @@ export default class BoardGame extends React.Component {
                                         board[indexRow][indexCol],
                                         this.props.sizeAlign
                                     )
+                                    this.props.checkDraw(board)
                                 }}
                                 key={indexCol}
                                 style={styles.button}
@@ -36,7 +37,8 @@ export default class BoardGame extends React.Component {
                                 {this.props.placeMark(
                                     board,
                                     indexRow,
-                                    indexCol
+                                    indexCol,
+                                    this.props.sizeMark
                                 )}
                             </TouchableOpacity>
                         )
@@ -44,8 +46,6 @@ export default class BoardGame extends React.Component {
                 </View>
             )
         })
-        console.log(board)
-        console.log(this.props.socket) 
         if(this.props.mode === "Online"){
             rowMaps = board.map((elementRow, indexRow) => {
                 return (
