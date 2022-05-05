@@ -1,5 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
+var Sound = require('react-native-sound')
+
 export default class BoardGame extends React.Component {
     constructor(props) {
         super(props)
@@ -7,6 +9,36 @@ export default class BoardGame extends React.Component {
     render() {
         let board = this.props.board
         const socket = this.props.socket
+        Sound.setCategory('Playback')
+        var ding = new Sound('tap.wav', Sound.MAIN_BUNDLE, (error) => {
+            if (error) {
+                console.log('failed to load the sound', error)
+                return
+            }
+            // when loaded successfully
+            console.log(
+                'duration in seconds: ' +
+                    ding.getDuration() +
+                    'number of channels: ' +
+                    ding.getNumberOfChannels()
+            )
+        })
+        const playPause = () => {
+            if (this.props.isEnableVolume) {
+                ding.setVolume(1)
+                console.log('volume: ' + ding.getVolume())
+            } else {
+                ding.setVolume(0)
+                console.log('volume: ' + ding.getVolume())
+            }
+            ding.play((success) => {
+                if (success) {
+                    console.log('successfully finished playing')
+                } else {
+                    console.log('playback failed due to audio decoding errors')
+                }
+            })
+        }
         let rowMaps = board.map((elementRow, indexRow) => {
             return (
                 <View
@@ -17,6 +49,7 @@ export default class BoardGame extends React.Component {
                         return (
                             <TouchableOpacity
                                 onPress={() => {
+                                    playPause()
                                     this.props.drawMark(
                                         board,
                                         indexRow,

@@ -15,8 +15,8 @@ import {
     fetchUser,
     setGameMode,
     connectionStatusChange,
+    setVolumeStatus
 } from '../redux/actions/index'
-import Icon from 'react-native-vector-icons/Ionicons'
 import auth from '@react-native-firebase/auth'
 import NetInfo from '@react-native-community/netinfo'
 var Sound = require('react-native-sound')
@@ -42,7 +42,7 @@ class Main extends Component {
     }
     state = {
         modalVisible: false,
-        isEnabled: true,
+        isEnabled: this.props.gameState.isEnableVolume,
     }
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible })
@@ -190,6 +190,7 @@ class Main extends Component {
                                     }
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() => {
+                                        this.props.setVolumeStatus(!isEnabled)
                                         this.setState({
                                             isEnabled: !isEnabled,
                                         })
@@ -616,7 +617,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) =>
     bindActionCreators(
-        { fetchUser, setGameMode, connectionStatusChange },
+        { fetchUser, setGameMode, connectionStatusChange, setVolumeStatus },
         dispatch
     )
 

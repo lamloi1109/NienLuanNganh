@@ -25,7 +25,7 @@ class Game extends React.Component {
             size: this.props.gameState.board.sizeBoard,
             sizeAlign: this.props.gameState.board.sizeAlign,
             modalVisible: false,
-            Opacity: 1
+            Opacity: 1,
         }
         this.navigate = this.navigate.bind(this)
         this.isWinner = this.isWinner.bind(this)
@@ -410,6 +410,7 @@ class Game extends React.Component {
                         sizeAlign={this.state.sizeAlign}
                         sizeMark={this.props.gameState.sizeMark}
                         checkDraw={this.checkDraw}
+                        isEnableVolume={this.props.gameState.isEnableVolume}
                     />
                     <View
                         style={{
