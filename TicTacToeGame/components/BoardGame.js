@@ -10,7 +10,7 @@ export default class BoardGame extends React.Component {
         let rowMaps = board.map((elementRow, indexRow) => {
             return (
                 <View
-                    style={{ flexDirection: 'row', backgroundColor: 'gray' }}
+                    style={{ flexDirection: 'row', backgroundColor: 'gray', }}
                     key={indexRow}
                 >
                     {elementRow.map((elementCol, indexCol) => {

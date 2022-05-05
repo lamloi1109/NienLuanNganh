@@ -8,6 +8,7 @@ import {
     Pressable,
     TouchableOpacity,
     Image,
+    Modal,
 } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -22,7 +23,9 @@ class Game extends React.Component {
             isDraw: false,
             isCross: null,
             size: this.props.gameState.board.sizeBoard,
-            sizeAlign: this.props.gameState.board.sizeAlign
+            sizeAlign: this.props.gameState.board.sizeAlign,
+            modalVisible: false,
+            Opacity: 1
         }
         this.navigate = this.navigate.bind(this)
         this.isWinner = this.isWinner.bind(this)
@@ -30,6 +33,7 @@ class Game extends React.Component {
         this.drawMark = this.drawMark.bind(this)
         this.placeMark = this.placeMark.bind(this)
         this.checkDraw = this.checkDraw.bind(this)
+        this.setModalVisible = this.setModalVisible.bind(this)
     }
     backAction = () => {
         Alert.alert('Quit Game ~~!', 'Are you sure you want to go back?', [
@@ -51,6 +55,9 @@ class Game extends React.Component {
             this.backAction
         )
         this.setBoard(this.state.size)
+    }
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible })
     }
     setBoard(size = 8) {
         // Tao ma tran size*size
@@ -156,32 +163,35 @@ class Game extends React.Component {
             count_right_down + count_left_up >= sizeAlign
         ) {
             isWin = true
-            console.log("WINNN");
+            this.state.Opacity = 0.75
+            this.setModalVisible(isWin)
+            console.log('WINNN')
         }
         this.setState({
             isWin,
         })
         return isWin
     }
-    checkDraw(board){
-        if(this.state.win === true){
+    checkDraw(board) {
+        if (this.state.win === true) {
             return false
         }
         let sum = 0
-        let size = board.length*board.length
-        for(let i = 0; i < board.length; i++){
-            for(let j = 0; j < board.length; j++){
-                if(board[i][j]){
+        let size = board.length * board.length
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[i][j]) {
                     sum = sum + 1
                 }
             }
         }
-        console.log(sum,size)
-
-        if(sum === size){
-            console.log("DRAWWW")
+        console.log(sum, size)
+        if (sum === size) {
+            console.log('DRAWWW')
+            this.state.Opacity = 0.75
+            this.setModalVisible(true)
             return true
-        }   
+        }
         return false
     }
     drawMark(board, currentRow, currentCol) {
@@ -201,17 +211,21 @@ class Game extends React.Component {
             }
         }
     }
-    resetGame(){
+    resetGame() {
         this.setState({
-            isCross: null,
-            isWin: false,
             board: [],
-            size: 8
+            isWin: false,
+            isDraw: false,
+            isCross: null,
+            size: this.props.gameState.board.sizeBoard,
+            sizeAlign: this.props.gameState.board.sizeAlign,
+            modalVisible: false,
+            Opacity: 1
         })
         this.setBoard(this.state.size)
     }
-    placeMark = (board, currentRow, currentCol,sizeMark) => {
-        if (board.length > 0 && !this.state.isWin) {
+    placeMark = (board, currentRow, currentCol, sizeMark) => {
+        if (board.length > 0 ) {
             if (board[currentRow][currentCol] == 1)
                 return (
                     <Image
@@ -245,8 +259,7 @@ class Game extends React.Component {
     }
 
     render() {
-        let gameMode = this.props.gameState
-        console.log(gameMode)
+        const { modalVisible } = this.state
         if (this.state.isCross === null) {
             return (
                 <View
@@ -340,182 +353,216 @@ class Game extends React.Component {
                     showHideTransition={true}
                     hidden={true}
                 />
-                {/* {this.state.isWin && !this.state.isDraw? (
-                    <>
-                        <View
+                <View>
+                    <View
+                        style={{
+                            justifyContent: 'space-around',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            borderColor: 'black',
+                            borderWidth: 2,
+                            padding: 10,
+                            marginTop: 20,
+                        }}
+                    >
+                        <Image
+                            source={require('../images/avatars/dentist.png')}
                             style={{
-                                flex: 1,
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                                width: 50,
+                                height: 50,
+                                borderRadius: 30,
+                                marginRight: 10,
+                            }}
+                        />
+                        <Text
+                            style={{
+                                color: 'black',
                             }}
                         >
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                {this.state.isCross ? 'O' : 'X'} Win
-                            </Text>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.navigate('Main')
-                                    }}
-                                    style={{
-                                        backgroundColor: '#E9C0A7',
-                                        padding: 20,
-                                        margin: 10,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontWeight: 'bold',
-                                            fontSize: 20,
-                                        }}
-                                    >
-                                        Back
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                       this.resetGame()
-                                    }}
-                                    style={{
-                                        backgroundColor: '#E9C0A7',
-                                        padding: 20,
-                                        margin: 10,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontWeight: 'bold',
-                                            fontSize: 20,
-                                        }}
-                                    >
-                                        Again
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View> */}
-                    {/* </>
-                ) : (
-                    <> */}
-                        <View>
-                            <View
-                                style={{
-                                    justifyContent: 'space-around',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    borderColor: 'black',
-                                    borderWidth: 2,
-                                    padding: 10,
-                                    marginTop: 20,
-                                }}
-                            >
+                            PLAYER 1
+                        </Text>
+                        <>
+                            {this.state.firstTurn ? (
                                 <Image
-                                    source={require('../images/avatars/dentist.png')}
+                                    source={require('../images/icons/cross.png')}
                                     style={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: 30,
-                                        marginRight: 10,
+                                        width: 30,
+                                        height: 30,
                                     }}
                                 />
-                                <Text
-                                    style={{
-                                        color: 'black',
-                                    }}
-                                >
-                                    PLAYER 1
-                                </Text>
-                                <>
-                                    {this.state.firstTurn ? (
-                                        <Image
-                                            source={require('../images/icons/cross.png')}
-                                            style={{
-                                                width: 30,
-                                                height: 30,
-                                            }}
-                                        />
-                                    ) : (
-                                        <Image
-                                        source={require('../images/icons/circle.png')}
-                                        style={{
-                                            width: 30,
-                                            height: 30,
-                                        }}
-                                    />
-                                    )}
-                                </>
-                            </View>
-                            <BoardGame
-                                isCross={this.state.isCross}
-                                board={this.state.board}
-                                placeMark={this.placeMark}
-                                drawMark={this.drawMark}
-                                isWinner={this.isWinner}
-                                sizeAlign={this.state.sizeAlign}
-                                sizeMark={this.props.gameState.sizeMark}
-                                checkDraw={this.checkDraw}
-                            />
-                             <View
-                                style={{
-                                    justifyContent: 'space-around',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    borderColor: 'black',
-                                    borderWidth: 2,
-                                    padding: 10,
-                                    marginBottom: 20,
-                                }}
-                            >
+                            ) : (
                                 <Image
-                                    source={require('../images/avatars/dentist.png')}
+                                    source={require('../images/icons/circle.png')}
                                     style={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: 30,
-                                        marginRight: 10,
+                                        width: 30,
+                                        height: 30,
                                     }}
                                 />
-                                <Text
+                            )}
+                        </>
+                    </View>
+                    <BoardGame
+                        isCross={this.state.isCross}
+                        board={this.state.board}
+                        placeMark={this.placeMark}
+                        drawMark={this.drawMark}
+                        isWinner={this.isWinner}
+                        sizeAlign={this.state.sizeAlign}
+                        sizeMark={this.props.gameState.sizeMark}
+                        checkDraw={this.checkDraw}
+                    />
+                    <View
+                        style={{
+                            justifyContent: 'space-around',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            borderColor: 'black',
+                            borderWidth: 2,
+                            padding: 10,
+                            marginBottom: 20,
+                        }}
+                    >
+                        <Image
+                            source={require('../images/avatars/dentist.png')}
+                            style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 30,
+                                marginRight: 10,
+                            }}
+                        />
+                        <Text
+                            style={{
+                                color: 'black',
+                            }}
+                        >
+                            PLAYER 2
+                        </Text>
+                        <>
+                            {this.state.firstTurn ? (
+                                <Image
+                                    source={require('../images/icons/circle.png')}
                                     style={{
-                                        color: 'black',
+                                        width: 30,
+                                        height: 30,
+                                    }}
+                                />
+                            ) : (
+                                <Image
+                                    source={require('../images/icons/cross.png')}
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                    }}
+                                />
+                            )}
+                        </>
+                    </View>
+                    <View>
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                Alert.alert('Modal has been closed.')
+                                this.setModalVisible(!modalVisible)
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    marginBottom: 100
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        padding: 30,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: 5
                                     }}
                                 >
-                                    PLAYER 2
-                                </Text>
-                                <>
-                                    {this.state.firstTurn ? (
-                                        <Image
-                                            source={require('../images/icons/circle.png')}
-                                            style={{
-                                                width: 30,
-                                                height: 30,
-                                            }}
-                                        />
+                                    {this.state.isWin === true &&
+                                    this.state.isDraw === false ? (
+                                        <>
+                                            <Text
+                                                style={{
+                                                    fontSize: 30,
+                                                    color: 'black',
+                                                }}
+                                            >
+                                                {this.state.isCross ? 'O' : 'X'}
+                                                Win
+                                            </Text>
+                                        </>
                                     ) : (
-                                        <Image
-                                        source={require('../images/icons/cross.png')}
-                                        style={{
-                                            width: 30,
-                                            height: 30,
-                                        }}
-                                    />
+                                        <>
+                                            <Text
+                                                style={{
+                                                    fontSize: 30,
+                                                    color: 'black',
+                                                }}
+                                            >
+                                                DRAW
+                                            </Text>
+                                        </>
                                     )}
-                                </>
+
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.navigate('Main')
+                                            }}
+                                            style={{
+                                                backgroundColor: 'black',
+                                                padding: 20,
+                                                margin: 10,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontWeight: 'bold',
+                                                    fontSize: 20,
+                                                }}
+                                            >
+                                                Back
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.resetGame()
+                                            }}
+                                            style={{
+                                                backgroundColor: '#2A75F3',
+                                                padding: 20,
+                                                margin: 10,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontWeight: 'bold',
+                                                    fontSize: 20,
+                                                }}
+                                            >
+                                                Again
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                    {/* </>
-                )} */}
+                        </Modal>
+                    </View>
+                </View>
             </View>
         )
     }
