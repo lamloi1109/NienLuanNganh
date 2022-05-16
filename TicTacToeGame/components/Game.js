@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getGameMode } from '../redux/actions/index'
+import { setGameResult } from '../redux/actions/index'
 import BoardGame from './BoardGame'
 class Game extends React.Component {
     constructor(props) {
@@ -163,8 +163,18 @@ class Game extends React.Component {
             count_right_down + count_left_up >= sizeAlign
         ) {
             isWin = true
+            if(this.state.isCross){
+                let Result = this.props.gameState.Result
+                Result.Xwins = Result.Xwins + 1
+                this.props.setGameResult(Result)
+            } else{
+                let Result = this.props.gameState.Result
+                Result.Owins = Result.Owins + 1
+                this.props.setGameResult(Result)
+            }
             this.state.Opacity = 0.75
             this.setModalVisible(isWin)
+
             console.log('WINNN')
         }
         this.setState({
@@ -190,6 +200,9 @@ class Game extends React.Component {
             console.log('DRAWWW')
             this.state.Opacity = 0.75
             this.setModalVisible(true)
+            let Result = this.props.gameState.Result
+            Result.Draw = Result.Draw + 1
+            this.props.setGameResult(Result)
             return true
         }
         return false
@@ -233,6 +246,7 @@ class Game extends React.Component {
                         style={{
                             width: sizeMark,
                             height: sizeMark,
+                            tintColor: !this.state.isCross ? 'red' : 'white'
                         }}
                     />
                 )
@@ -243,6 +257,7 @@ class Game extends React.Component {
                         style={{
                             width: sizeMark,
                             height: sizeMark,
+                            tintColor: this.state.isCross ? 'red' : 'white'
                         }}
                     />
                 )
@@ -252,6 +267,7 @@ class Game extends React.Component {
                     style={{
                         width: sizeMark,
                         height: sizeMark,
+                        tintColor: '#2B2B2B'
                     }}
                 />
             )
@@ -260,6 +276,7 @@ class Game extends React.Component {
 
     render() {
         const { modalVisible } = this.state
+        console.log("Result",this.props.gameState.Result)
         if (this.state.isCross === null) {
             return (
                 <View
@@ -572,4 +589,9 @@ class Game extends React.Component {
 function mapStateToProps(state) {
     return { gameState: state.gameState }
 }
-export default connect(mapStateToProps, null)(Game)
+const mapDispatchToProps = (dispatch) =>
+    bindActionCreators(
+        { setGameResult },
+        dispatch
+    )
+export default connect(mapStateToProps, mapDispatchToProps)(Game)

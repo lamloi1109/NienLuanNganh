@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import BoardGame from './BoardGame'
-
+import Loading from './Loader'
 class Test extends Component {
     constructor(props) {
         super(props)
@@ -23,10 +23,12 @@ class Test extends Component {
             isWin: false,
             isCross: null,
             size: 8,
-            socket: socketIO('http://10.3.74.109:5000', {
+            socket: socketIO('http://10.3.74.129:5000', {
                 transports: ['websocket'],
                 jsonp: false,
-            })
+            }),
+            playerID: null,
+            numberPlayer: null,
         }
         this.navigate = this.navigate.bind(this)
         // this.isWinner = this.isWinner.bind(this)
@@ -44,17 +46,20 @@ class Test extends Component {
                 onPress: () => null,
                 style: 'cancel',
             },
-            { text: 'YES', onPress: () => {
-                this.state.socket.disconnect()
-                this.navigate('Main')
-            } },
+            {
+                text: 'YES',
+                onPress: () => {
+                    // this.state.socket.disconnect()
+                    this.navigate('Main')
+                },
+            },
         ])
         return true
     }
     componentDidMount() {
         // let created = firestore().Time()
         // auth().onAuthStateChanged(function (user) {
-        //     if (user) {  
+        //     if (user) {
         //     firestore()
         //         .collection('games')
         //         .add({
@@ -64,11 +69,13 @@ class Test extends Component {
         //         console.log('ko Dang nhap')
         //     }
         // })
-        this.processSocket(this.state.socket)
+        // this.processSocket(this.state.socket)
         this.backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
             this.backAction
         )
+        this.state.socket.emit('join room', '1')
+  
         this.setBoard(this.state.size)
     }
 
@@ -86,26 +93,22 @@ class Test extends Component {
         // this.setState({
         //     board,
         // })
-        this.state.socket.emit('setBoard',this.state.size)
-       this.state.socket.on("getBoard", (data) => {
+        this.state.socket.emit('setBoard', this.state.size)
+        this.state.socket.on('getBoard', (data) => {
             this.setState({
-                board: data
+                board: data,
             })
-        });
-    }   
-    processSocket(socket){
-        socket.connect()
-        socket.on('connect', () => {
-            console.log('connected to socket server')
-        })
-        socket.emit('users', this.props.userState)
-        socket.emit('join room', '1')
-        socket.on('usersPlaying',function(data){
-            console.log("Player",data)
         })
     }
+    // processSocket(socket){
+    //     socket.on('getNumberPlayer',(number) => {
+    //         console.log(number)
+    //         this.setState({
+    //             numberPlayer: number
+    //         })
+    //   })
+    // }
     componentWillUnmount() {
-        
         this.backHandler.remove()
     }
 
@@ -216,7 +219,6 @@ class Test extends Component {
                 })
             }
         }
-
     }
 
     // resetGame(){
@@ -259,11 +261,28 @@ class Test extends Component {
                     }}
                 />
             )
-        } else{
-            console.log("error")
+        } else {
+            console.log('error')
         }
     }
     render() {
+        let countPlayer = 0;
+        this.state.socket.on('getNumberPlayer', (number) => {
+            countPlayer = number
+            console.log('NUmber', countPlayer,'ID: ', this.state.socket.id)
+        })
+      
+        // if (countPlayer < 2) {
+        //     return (
+        //         <View>
+        //             <Text style={{
+        //                 color:'black'
+        //             }}>
+        //                  {' ' + countPlayer}
+        //             </Text>
+        //         </View>
+        //     )
+        // }
         let gameMode = this.props.gameState.gameMode
         if (this.state.isCross === null) {
             return (
@@ -358,7 +377,7 @@ class Test extends Component {
                     showHideTransition={true}
                     hidden={true}
                 />
-                {this.state.isWin? (
+                {this.state.isWin ? (
                     <>
                         <View
                             style={{
@@ -403,7 +422,7 @@ class Test extends Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
-                                       this.resetGame()
+                                        this.resetGame()
                                     }}
                                     style={{
                                         backgroundColor: '#E9C0A7',
@@ -465,12 +484,12 @@ class Test extends Component {
                                         />
                                     ) : (
                                         <Image
-                                        source={require('../images/icons/circle.png')}
-                                        style={{
-                                            width: 30,
-                                            height: 30,
-                                        }}
-                                    />
+                                            source={require('../images/icons/circle.png')}
+                                            style={{
+                                                width: 30,
+                                                height: 30,
+                                            }}
+                                        />
                                     )}
                                 </>
                             </View>
@@ -481,9 +500,9 @@ class Test extends Component {
                                 drawMark={this.drawMark}
                                 isWinner={this.isWinner}
                                 mode={gameMode}
-                                socket = {this.state.socket}
+                                socket={this.state.socket}
                             />
-                             <View
+                            <View
                                 style={{
                                     justifyContent: 'space-around',
                                     flexDirection: 'row',
@@ -521,12 +540,12 @@ class Test extends Component {
                                         />
                                     ) : (
                                         <Image
-                                        source={require('../images/icons/cross.png')}
-                                        style={{
-                                            width: 30,
-                                            height: 30,
-                                        }}
-                                    />
+                                            source={require('../images/icons/cross.png')}
+                                            style={{
+                                                width: 30,
+                                                height: 30,
+                                            }}
+                                        />
                                     )}
                                 </>
                             </View>

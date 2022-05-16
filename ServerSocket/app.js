@@ -42,49 +42,45 @@ app.use(function (err, req, res, next) {
 //
 const io = socket(server);
 let arr = [];
-let users = [];
+let players = {};
+let playersInGame = 0;
 // tạo kết nối giữa client và server
 io.on("connection", (socket) => {
-  console.log("client connected on websocket");
+  socket.on("newPlayer", (data) => {
+    console.log("New client connected, with id: " + socket.id);
+    players[socket.id] = data;
+    console.log("Current number of players: " + Object.keys(players).length);
+    console.log("players dictionary: ", players);
+  });
   socket.on("disconnect", () => {
+    delete players[socket.id];
     console.log("Client disconnected");
   });
-  socket.on("users", function (data) {
-    users.push(data)
-  });
-  console.log(users);
+
   socket.on("sendBoardData", function (data) {
-    arr = data
-    console.log(data)
+    arr = data;
+    console.log(data);
   });
-  socket.on('message', function(data){
-    console.log(data)
-  })
-  socket.on('setBoard', function(size = 8){
-    let board = []
+  socket.on("setBoard", function (size = 8) {
+    let board = [];
     for (let i = 0; i < size; i++) {
-        let tmp = []
-        for (let j = 0; j < size; j++) {
-            tmp[j] = 0
-        }
-        board[i] = tmp
+      let tmp = [];
+      for (let j = 0; j < size; j++) {
+        tmp[j] = 0;
+      }
+      board[i] = tmp;
     }
-    console.log(board)
-    arr = board
-  })
-
-  socket.emit('getBoard',arr)
-
-  socket.on("join room", function (data) {
-    console.log(data)
-    //THam gia phòng  
-    socket.join(data);
-    socket.in(data).emit('connectToRoom', "You are in room no. "+data);
-    socket.in(data).emit('usersPlaying', users);
+    console.log(board);
+    arr = board;
   });
-  socket.on("disconnect", () => {
-    users.pop()
-    console.log("thoat")
+  socket.emit("getBoard", arr);
+  socket.on("join room", function (data) {
+    console.log("client connected on websocket");
+    socket.join(data);
+    if(playersInGame <= 2 ){
+      playersInGame++;
+      socket.to(data).emit("getNumberPlayer",playersInGame);
+    }
   });
 });
 

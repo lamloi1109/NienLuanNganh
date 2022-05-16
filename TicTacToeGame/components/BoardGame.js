@@ -9,8 +9,9 @@ export default class BoardGame extends React.Component {
     render() {
         let board = this.props.board
         const socket = this.props.socket
+
         Sound.setCategory('Playback')
-        var ding = new Sound('tap.wav', Sound.MAIN_BUNDLE, (error) => {
+        var ding = new Sound('press.wav', Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error)
                 return
@@ -95,7 +96,7 @@ export default class BoardGame extends React.Component {
                                             indexRow,
                                             indexCol
                                         )
-                                        socket.emit('sendBoardData',board)
+                                        // socket.emit('sendBoardData',board)
                                         // this.props.isWinner(
                                         //     board,
                                         //     indexRow,

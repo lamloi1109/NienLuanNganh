@@ -14,6 +14,7 @@ import SignUpScreen from './components/auth/SignUp'
 import LoginScreen from './components/auth/Login'
 import LoadingScreen from './components/Loader'
 import GameScreen from './components/Game'
+import GameResultScreen from './components/GameResult'
 import Test from './components/Test'
 import BoardSettings from './components/BoardSettings'
 import firebase from '@react-native-firebase/app'
@@ -160,6 +161,14 @@ class App extends React.Component {
                              <Stack.Screen
                                 name="Online"
                                 component={Test}
+                                options={{
+                                    headerShown: false,
+                                    headerTransparent: true,
+                                }}
+                            />
+                             <Stack.Screen
+                                name="GameResult"
+                                component={GameResultScreen}
                                 options={{
                                     headerShown: false,
                                     headerTransparent: true,

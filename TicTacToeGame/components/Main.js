@@ -7,15 +7,16 @@ import {
     ImageBackground,
     Modal,
     Switch,
-    StatusBar
+    StatusBar,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import socketIO from 'socket.io-client'
 import {
     fetchUser,
     setGameMode,
     connectionStatusChange,
-    setVolumeStatus
+    setVolumeStatus,
 } from '../redux/actions/index'
 import auth from '@react-native-firebase/auth'
 import NetInfo from '@react-native-community/netinfo'
@@ -34,7 +35,9 @@ class Main extends Component {
             this.props.connectionStatusChange(state.isConnected)
         })
         this.props.fetchUser()
-        console.log('Verify: ' + auth().currentUser.emailVerified)
+        if (this.props.userState.currentUser !== null) {
+            this.joinSocket(this.state.socket)
+        }
     }
     componentWillUnmount() {
         this.NetInfoSubscribtion && this.NetInfoSubscribtion()
@@ -43,11 +46,25 @@ class Main extends Component {
     state = {
         modalVisible: false,
         isEnabled: this.props.gameState.isEnableVolume,
+        socket: socketIO('http://10.3.74.129:5000', {
+            transports: ['websocket'],
+            jsonp: false,
+        }),
+        playerID: null,
     }
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible })
     }
-
+    joinSocket = (socket) => {
+        socket.connect()
+        socket.on('connect', () => {
+            console.log('connected to socket server')
+        })
+        socket.emit('newPlayer', this.props.userState)
+    }
+    // disconnectSocket = (socket) => {
+    //     socket.disconnect()
+    // }
     render() {
         const { modalVisible, isEnabled } = this.state
         Sound.setCategory('Playback')
@@ -341,19 +358,21 @@ class Main extends Component {
                             }}
                         />
                     </Pressable>
-                    <Image
-                        source={{
-                            uri: 'https://cdn-icons.flaticon.com/png/512/4681/premium/4681761.png?token=exp=1650444251~hmac=13879ae15bf373b7b7dc95708c1bdef3',
-                        }}
-                        style={{
-                            width: 50,
-                            height: 50,
-                            borderRadius: 30,
-                            borderColor: 'white',
-                            borderWidth: 2,
-                            marginRight: 10,
-                        }}
-                    />
+                    <Pressable>
+                        <Image
+                            source={{
+                                uri: 'https://cdn-icons.flaticon.com/png/512/4681/premium/4681761.png?token=exp=1650444251~hmac=13879ae15bf373b7b7dc95708c1bdef3',
+                            }}
+                            style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 30,
+                                borderColor: 'white',
+                                borderWidth: 2,
+                                marginRight: 10,
+                            }}
+                        />
+                    </Pressable>
                 </View>
                 <View
                     style={{
@@ -393,7 +412,6 @@ class Main extends Component {
                         <ImageBackground
                             source={{
                                 uri: 'https://img6.thuthuatphanmem.vn/uploads/2022/02/12/background-chat-luong-cho-powerpoint_100426266.jpg',
-
                             }}
                             style={{
                                 padding: 10,
@@ -426,7 +444,7 @@ class Main extends Component {
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                   Play With Machine
+                                    Play With Machine
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -508,12 +526,11 @@ class Main extends Component {
                                 }}
                                 onPress={() => {
                                     playPause()
-                                    this.props.setGameMode('VsMachine')
-                                    this.navigate('VsMachine')
+                                    this.navigate('GameResult')
                                 }}
                             >
                                 <Text style={{ color: 'white' }}>
-                                   Play With Friend
+                                    Game Result
                                 </Text>
                             </Pressable>
                         </ImageBackground>
@@ -547,6 +564,7 @@ class Main extends Component {
                                 }}
                                 onPress={() => {
                                     playPause()
+
                                     this.props.setGameMode('Online')
                                     this.navigate('Online')
                                 }}

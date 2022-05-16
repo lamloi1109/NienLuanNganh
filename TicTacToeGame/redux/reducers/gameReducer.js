@@ -1,4 +1,4 @@
-import {SET_GAME_MODE, CONNECTION_STATUS_CHANGE, ROOMS_STATE_CHANGE, SET_BOARD_GAME, SET_SIZE_MARK, VOLUME_STATE_CHANGE} from '../contants/index'
+import {SET_GAME_MODE, CONNECTION_STATUS_CHANGE, ROOMS_STATE_CHANGE, SET_BOARD_GAME, SET_SIZE_MARK, VOLUME_STATE_CHANGE, RESULT_STATE_CHANGE} from '../contants/index'
 const initializeState = {
     gameMode: null,
     connection_status: true,
@@ -8,7 +8,12 @@ const initializeState = {
         sizeAlign: 5
     },
     sizeMark: 40,
-    isEnableVolume: true
+    isEnableVolume: true,
+    Result: {
+        Xwins: 0,
+        Owins: 0,
+        Draw: 0
+    }
 }
 
 export const gameReducer = (state = initializeState, action) => {
@@ -42,6 +47,11 @@ export const gameReducer = (state = initializeState, action) => {
             return {
                 ...state,
                 isEnableVolume: action.isEnableVolume
+            }
+            case RESULT_STATE_CHANGE: 
+            return {
+                ...state,
+                Result: action.Result
             }
         default:
             return state;

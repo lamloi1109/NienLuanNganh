@@ -1,5 +1,5 @@
 import firebase from '@react-native-firebase/app'
-import { USER_STATE_CHANGE,SET_GAME_MODE, CONNECTION_STATUS_CHANGE,SET_BOARD_GAME, SET_SIZE_MARK, VOLUME_STATE_CHANGE  } from '../contants/index'
+import { USER_STATE_CHANGE,SET_GAME_MODE, CONNECTION_STATUS_CHANGE,SET_BOARD_GAME, SET_SIZE_MARK, VOLUME_STATE_CHANGE, RESULT_STATE_CHANGE  } from '../contants/index'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 export function fetchUser() {
@@ -74,7 +74,20 @@ export function setVolumeStatus(isEnableVolume) {
             type: VOLUME_STATE_CHANGE,
             isEnableVolume: isEnableVolume
         })
+        const stateAfter = getState()
+        console.log(stateAfter)
 
+    }
+}
+
+export function setGameResult(Result) {
+    return (dispatch, getState) => {
+        const stateBefore = getState()
+        console.log("SET BOARD")
+        dispatch({
+            type: RESULT_STATE_CHANGE,
+            Result: Result
+        })
         const stateAfter = getState()
         console.log(stateAfter)
 
